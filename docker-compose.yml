@@ -1,0 +1,17 @@
+version: '3.4'
+
+services:
+  catalogapi:
+    image: ${DOCKER_REGISTRY-}catalogapi
+    build:
+      context: .
+      dockerfile: Catalog.API/Dockerfile
+
+  sqldata:
+    image: mcr.microsoft.com/mssql/server:latest
+    environment:
+        - SA_PASSWORD=Pass@word
+        - ACCEPT_EULA=Y
+   ports: 
+        - "5434:1433"
+
