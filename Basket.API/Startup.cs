@@ -50,7 +50,7 @@ namespace Basket.API
 
             services.AddSingleton<ConnectionMultiplexer>(sp =>
             {
-                string connString = "redis:6379,abortConnect=false";
+                string connString = "localhost:9080,abortConnect=false";
                 var configuration = ConfigurationOptions.Parse(connString, true);
 
                 configuration.ResolveDns = true;
