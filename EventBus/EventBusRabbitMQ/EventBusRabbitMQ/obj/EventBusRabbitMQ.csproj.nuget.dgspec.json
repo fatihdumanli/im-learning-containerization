@@ -41,6 +41,28 @@
       },
       "frameworks": {
         "netcoreapp3.1": {
+          "dependencies": {
+            "Autofac": {
+              "target": "Package",
+              "version": "[5.2.0, )"
+            },
+            "Microsoft.Extensions.Logging.Abstractions": {
+              "target": "Package",
+              "version": "[3.1.7, )"
+            },
+            "Polly": {
+              "target": "Package",
+              "version": "[7.2.1, )"
+            },
+            "RabbitMQ.Client": {
+              "target": "Package",
+              "version": "[6.2.1, )"
+            },
+            "Serilog": {
+              "target": "Package",
+              "version": "[2.9.0, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",

@@ -1,10 +1,17 @@
 {
   "version": 2,
-  "dgSpecHash": "Xss598GGGYkN4t4ONmyUIV3yCH1ttMHNBJjYELpDGK/Wko2Ml6SP2gX0INde7MqQUhGP/GFFerntUMRzaY69hw==",
+  "dgSpecHash": "RDZr1ETMMHFgB5HcpV1A5LT2AK50etgllFDrWqY67goAf5bvgQFay8l1vpw37+apak0GzOfvuXXUFB5Ovsxafw==",
   "success": true,
   "projectFilePath": "C:\\Users\\fatih\\source\\repos\\Catalog.API\\EventBus\\EventBusRabbitMQ\\EventBusRabbitMQ\\EventBusRabbitMQ.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\fatih\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512"
+    "C:\\Users\\fatih\\.nuget\\packages\\autofac\\5.2.0\\autofac.5.2.0.nupkg.sha512",
+    "C:\\Users\\fatih\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\3.1.7\\microsoft.extensions.logging.abstractions.3.1.7.nupkg.sha512",
+    "C:\\Users\\fatih\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512",
+    "C:\\Users\\fatih\\.nuget\\packages\\polly\\7.2.1\\polly.7.2.1.nupkg.sha512",
+    "C:\\Users\\fatih\\.nuget\\packages\\rabbitmq.client\\6.2.1\\rabbitmq.client.6.2.1.nupkg.sha512",
+    "C:\\Users\\fatih\\.nuget\\packages\\serilog\\2.9.0\\serilog.2.9.0.nupkg.sha512",
+    "C:\\Users\\fatih\\.nuget\\packages\\system.memory\\4.5.4\\system.memory.4.5.4.nupkg.sha512",
+    "C:\\Users\\fatih\\.nuget\\packages\\system.threading.channels\\4.7.1\\system.threading.channels.4.7.1.nupkg.sha512"
   ],
   "logs": []
 }
