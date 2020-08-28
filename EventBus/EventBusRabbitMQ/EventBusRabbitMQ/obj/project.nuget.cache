@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "Xss598GGGYkN4t4ONmyUIV3yCH1ttMHNBJjYELpDGK/Wko2Ml6SP2gX0INde7MqQUhGP/GFFerntUMRzaY69hw==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\fatih\\source\\repos\\Catalog.API\\EventBus\\EventBusRabbitMQ\\EventBusRabbitMQ\\EventBusRabbitMQ.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\fatih\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512"
+  ],
+  "logs": []
+}

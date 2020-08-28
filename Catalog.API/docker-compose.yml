@@ -9,6 +9,12 @@ services:
             - ConnectionString=Server=sqldata,1433;Initial Catalog=CatalogService;User Id=sa;Password=Pass@word;TrustServerCertificate=True;Connection Timeout=5;
         depends_on: 
         - sqldata
+    basketapi:
+        image: "basketapi:dev"
+        ports:
+            - "8082:5002"
+        depends_on:
+            - basketdata
     sqldata:
         image: "microsoft/mssql-server-linux"
         environment: 
@@ -16,3 +22,7 @@ services:
             - ACCEPT_EULA=Y
         ports:
             - "5433:1433"
+    basketdata:
+        image: "redis"
+        ports:
+            - "9080:6379"

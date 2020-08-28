@@ -1,17 +1,28 @@
 version: '3.4'
 
 services:
-  catalogapi:
-    image: ${DOCKER_REGISTRY-}catalogapi
-    build:
-      context: .
-      dockerfile: Catalog.API/Dockerfile
-
-  sqldata:
-    image: mcr.microsoft.com/mssql/server:latest
-    environment:
-        - SA_PASSWORD=Pass@word
-        - ACCEPT_EULA=Y
-   ports: 
-        - "5434:1433"
-
+    catalogapi:
+        image: "catalogapi:dev"
+        ports:
+            - "8081:5001"
+        environment:
+            - ConnectionString=Server=sqldata,1433;Initial Catalog=CatalogService;User Id=sa;Password=Pass@word;TrustServerCertificate=True;Connection Timeout=5;
+        depends_on: 
+        - sqldata
+    basketapi:
+        image: "basketapi:dev"
+        ports:
+            - "8082:5002"
+        depends_on:
+            - basketdata
+    sqldata:
+        image: "microsoft/mssql-server-linux"
+        environment: 
+            - SA_PASSWORD=Pass@word
+            - ACCEPT_EULA=Y
+        ports:
+            - "5433:1433"
+    basketdata:
+        image: "redis"
+        ports:
+            - "9080:6379"
