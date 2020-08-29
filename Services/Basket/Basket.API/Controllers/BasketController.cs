@@ -34,6 +34,7 @@ namespace Basket.API.Controllers
         [ProducesResponseType(typeof(CustomerBasket), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<CustomerBasket>> GetBasketByIdAsync(string id)
         {
+            _logger.LogInformation("Log message in the Index() method");
             var basket = await _repository.GetBasketAsync(id);
 
             return Ok(basket ?? new CustomerBasket(id));

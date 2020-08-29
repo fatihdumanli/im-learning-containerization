@@ -1444,6 +1444,7 @@
       "RabbitMQEventBus/1.0.0": {
         "dependencies": {
           "EventBus": "1.0.0",
+          "Microsoft.Extensions.Logging.Abstractions": "3.1.7",
           "RabbitMQ.Client": "6.2.1"
         },
         "runtime": {

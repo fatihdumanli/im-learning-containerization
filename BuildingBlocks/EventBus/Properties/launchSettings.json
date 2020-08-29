@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "EventBus": {
+      "commandName": "Executable",
+      "remoteDebugEnabled": false
+    }
+  }
+}

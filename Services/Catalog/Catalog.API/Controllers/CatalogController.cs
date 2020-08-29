@@ -10,6 +10,7 @@ using EventBus.Abstractions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace Catalog.API.Controllers
@@ -20,11 +21,14 @@ namespace Catalog.API.Controllers
     {
         private readonly CatalogContext _catalogContext;
         private readonly IEventBus _eventBus;
+         
+        ILogger<CatalogController> _logger;
         //private readonly CatalogSettings _settings;
         //private readonly ICatalogIntegrationEventService _catalogIntegrationService;
 
-        public CatalogController(CatalogContext context, IEventBus eventBus) 
+        public CatalogController(CatalogContext context, IEventBus eventBus, ILogger<CatalogController> logger) 
         {
+            this._logger = logger;
             this._eventBus = eventBus;
             _catalogContext = context ?? throw new ArgumentNullException(nameof(context));
             context.ChangeTracker.QueryTrackingBehavior = Microsoft.EntityFrameworkCore.QueryTrackingBehavior.NoTracking;
@@ -38,6 +42,7 @@ namespace Catalog.API.Controllers
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> ItemsAsync([FromQuery] int pageSize = 10, [FromQuery] int pageIndex = 0, string ids = null)
         {
+            _logger.LogInformation("[INFO-----------] Creating instance of Controller.");
             if (!string.IsNullOrEmpty(ids))
             {
                 var items = await this.GetItemsByIdAsync(ids);

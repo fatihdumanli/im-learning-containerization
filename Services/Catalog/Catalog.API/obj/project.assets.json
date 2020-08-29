@@ -1532,6 +1532,7 @@
         "framework": ".NETCoreApp,Version=v3.1",
         "dependencies": {
           "EventBus": "1.0.0",
+          "Microsoft.Extensions.Logging.Abstractions": "3.1.7",
           "RabbitMQ.Client": "6.2.1"
         },
         "compile": {

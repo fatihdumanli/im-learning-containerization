@@ -1,6 +1,8 @@
 using System.Text;
 using EventBus.Abstractions;
 using EventBus.Events;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
@@ -11,37 +13,29 @@ namespace RabbitMQEventBus
     {
         private readonly string rabbitMQ_hostName = "localhost";
         private readonly string exchange_Name = "eshop_exchange";
+        //Hep aynı consumerchannel'ı kullanmak durumundayız.
         private IModel _consumerChannel;
         private string _queueName;
+        private readonly ILogger<EventBusRabbitMQ> _logger;
 
-
-        public EventBusRabbitMQ(string queueName)
+        public EventBusRabbitMQ(string queueName, ILogger<EventBusRabbitMQ> logger = null) 
         {
-            _consumerChannel = CreateConsumerChannel();
+            this._logger = logger;
+
+            if(logger == null)
+                this._logger = NullLogger<EventBusRabbitMQ>.Instance;
+
+            _logger.LogInformation(" [X] INFO FROM EventBusRabbitMQ:" +
+                 "Created new EventBusRabbitMQ instance. for queue: {0}", queueName);
+
             _queueName = queueName;
-        }
-
-        private IModel CreateConsumerChannel()
-        {
-            var factory = new ConnectionFactory() { HostName = rabbitMQ_hostName };
-
-            var conn = factory.CreateConnection();
-
-            var channel = conn.CreateModel();
-            
-            channel.ExchangeDeclare(exchange: this.exchange_Name, ExchangeType.Fanout);
-
-            channel.QueueDeclare(queue: this._queueName,
-                durable: false,
-                exclusive: false,
-                autoDelete: false,
-                arguments: null);
-
-            return channel;
         }
         public void Publish(IntegrationEvent @event)
         {
-            var factory = new ConnectionFactory() { HostName = this.rabbitMQ_hostName };
+            _logger.LogInformation(" [X] INFO FROM EventBusRabbitMQ:" +
+                            "Published new event {0}", JsonConvert.SerializeObject(@event));   
+
+            var factory = new ConnectionFactory() { HostName = rabbitMQ_hostName };
 
             using(var connection = factory.CreateConnection())
             {
@@ -58,32 +52,31 @@ namespace RabbitMQEventBus
             }
         }
 
-        public void Subscribe<T, TH>()
-            where T : IntegrationEvent
-            where TH : IIntegrationEventHandler<T>
+       
+        private void Message_Received(object sender, BasicDeliverEventArgs e)
+        {
+            _logger.LogInformation(" [x] Message received");
+        }
+
+         public void StartConsuming()
         {
 
-                var factory = new ConnectionFactory() { HostName = rabbitMQ_hostName };
+            var factory = new ConnectionFactory() { HostName = rabbitMQ_hostName };
+            var connection = factory.CreateConnection();
+            this._consumerChannel = connection.CreateModel();
 
-                using(var connection = factory.CreateConnection())
-                {
-                    this._consumerChannel.QueueBind(queue: _queueName,
-                        exchange: this.exchange_Name, routingKey: null);
-                }
+            this._consumerChannel.ExchangeDeclare(exchange: this.exchange_Name, ExchangeType.Fanout);
 
-                //start basic consumer.
+            this._consumerChannel.QueueDeclare(this._queueName, false, false, false, null);
 
-                var consumer = new EventingBasicConsumer(_consumerChannel);
-                
-                _consumerChannel.BasicConsume(queue: this._queueName,
-                    autoAck: false,
-                    consumer: consumer);
+            this._consumerChannel.QueueBind(this._queueName, this.exchange_Name, "", null);
+            
+            var consumer = new EventingBasicConsumer(this._consumerChannel);
 
-                consumer.Received += (model, ea) => {
-                    
-                    var x = 2;
-                };
+            consumer.Received += Message_Received;
 
+            this._consumerChannel.BasicConsume(this._queueName, false, consumer);
         }
+
     }
 }

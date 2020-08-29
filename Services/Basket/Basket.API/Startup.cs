@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Basket.API.Infrastructure.Repository;
 using Basket.API.Model;
 using Basket.API.Services;
+using EventBus.Abstractions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -14,6 +15,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Console;
+using Microsoft.Extensions.Logging.Debug;
+using RabbitMQEventBus;
 using StackExchange.Redis;
 
 namespace Basket.API
@@ -31,6 +35,23 @@ namespace Basket.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddLogging(config =>
+            {
+                config.AddDebug(); // Log to debug (debug window in Visual Studio or any debugger attached)
+                config.AddConsole(); // Log to console (colored !)
+            })
+            .Configure<LoggerFilterOptions>(options =>
+            {
+                
+                
+            })
+            .AddSingleton<IEventBus, EventBusRabbitMQ>(sp =>
+            {                  
+                var logger = sp.GetRequiredService<ILogger<EventBusRabbitMQ>>();
+
+                return new EventBusRabbitMQ("Basket", logger);
+            });
 
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -50,7 +71,7 @@ namespace Basket.API
 
             services.AddSingleton<ConnectionMultiplexer>(sp =>
             {
-                string connString = "basketdata, abortConnect=false";
+                string connString = "localhost:9080, abortConnect=false";
                 var configuration = ConfigurationOptions.Parse(connString, true);
 
                 configuration.ResolveDns = true;
@@ -60,8 +81,10 @@ namespace Basket.API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env,
+            ILoggerFactory loggerFactory)
         {
+            loggerFactory.AddFile("C:\\logs\\1.txt");
             app.UseSwagger().UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API v1.0"));
 
             if (env.IsDevelopment())
@@ -79,6 +102,14 @@ namespace Basket.API
             {
                 endpoints.MapControllers();
             });
+
+            ConfigureEventBus(app);
+        }
+
+        protected virtual void ConfigureEventBus(IApplicationBuilder app)
+        {
+            var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
+            eventBus.StartConsuming();
         }
     }
 }

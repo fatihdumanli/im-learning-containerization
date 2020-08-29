@@ -74,3 +74,16 @@ C:\Users\fatih\source\repos\fatiheCommerce.OnContainers\Services\Basket\Basket.A
 C:\Users\fatih\source\repos\fatiheCommerce.OnContainers\Services\Basket\Basket.API\obj\Debug\netcoreapp3.1\Basket.API.dll
 C:\Users\fatih\source\repos\fatiheCommerce.OnContainers\Services\Basket\Basket.API\obj\Debug\netcoreapp3.1\Basket.API.pdb
 C:\Users\fatih\source\repos\fatiheCommerce.OnContainers\Services\Basket\Basket.API\obj\Debug\netcoreapp3.1\Basket.API.genruntimeconfig.cache
+C:\Users\fatih\source\repos\fatiheCommerce.OnContainers\Services\Basket\Basket.API\bin\Debug\netcoreapp3.1\RabbitMQ.Client.dll
+C:\Users\fatih\source\repos\fatiheCommerce.OnContainers\Services\Basket\Basket.API\bin\Debug\netcoreapp3.1\EventBus.dll
+C:\Users\fatih\source\repos\fatiheCommerce.OnContainers\Services\Basket\Basket.API\bin\Debug\netcoreapp3.1\RabbitMQEventBus.dll
+C:\Users\fatih\source\repos\fatiheCommerce.OnContainers\Services\Basket\Basket.API\bin\Debug\netcoreapp3.1\EventBus.pdb
+C:\Users\fatih\source\repos\fatiheCommerce.OnContainers\Services\Basket\Basket.API\bin\Debug\netcoreapp3.1\RabbitMQEventBus.pdb
+C:\Users\fatih\source\repos\fatiheCommerce.OnContainers\Services\Basket\Basket.API\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Logging.Abstractions.dll
+C:\Users\fatih\source\repos\fatiheCommerce.OnContainers\Services\Basket\Basket.API\bin\Debug\netcoreapp3.1\Serilog.dll
+C:\Users\fatih\source\repos\fatiheCommerce.OnContainers\Services\Basket\Basket.API\bin\Debug\netcoreapp3.1\Serilog.Extensions.Logging.dll
+C:\Users\fatih\source\repos\fatiheCommerce.OnContainers\Services\Basket\Basket.API\bin\Debug\netcoreapp3.1\Serilog.Extensions.Logging.File.dll
+C:\Users\fatih\source\repos\fatiheCommerce.OnContainers\Services\Basket\Basket.API\bin\Debug\netcoreapp3.1\Serilog.Formatting.Compact.dll
+C:\Users\fatih\source\repos\fatiheCommerce.OnContainers\Services\Basket\Basket.API\bin\Debug\netcoreapp3.1\Serilog.Sinks.Async.dll
+C:\Users\fatih\source\repos\fatiheCommerce.OnContainers\Services\Basket\Basket.API\bin\Debug\netcoreapp3.1\Serilog.Sinks.File.dll
+C:\Users\fatih\source\repos\fatiheCommerce.OnContainers\Services\Basket\Basket.API\bin\Debug\netcoreapp3.1\Serilog.Sinks.RollingFile.dll

@@ -9,10 +9,19 @@
       "RabbitMQEventBus/1.0.0": {
         "dependencies": {
           "EventBus": "1.0.0",
+          "Microsoft.Extensions.Logging.Abstractions": "3.1.7",
           "RabbitMQ.Client": "6.2.1"
         },
         "runtime": {
           "RabbitMQEventBus.dll": {}
+        }
+      },
+      "Microsoft.Extensions.Logging.Abstractions/3.1.7": {
+        "runtime": {
+          "lib/netstandard2.0/Microsoft.Extensions.Logging.Abstractions.dll": {
+            "assemblyVersion": "3.1.7.0",
+            "fileVersion": "3.100.720.37108"
+          }
         }
       },
       "Newtonsoft.Json/12.0.3": {
@@ -59,6 +68,13 @@
       "type": "project",
       "serviceable": false,
       "sha512": ""
+    },
+    "Microsoft.Extensions.Logging.Abstractions/3.1.7": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-oD7LQbMuaqq/yAz8PKX0hl4+H/vDFTQHo8rxbKB36P1/bG8FG7JUVKBoHkSt1MaJUtgyiHrH1AlAhaucKUKyEg==",
+      "path": "microsoft.extensions.logging.abstractions/3.1.7",
+      "hashPath": "microsoft.extensions.logging.abstractions.3.1.7.nupkg.sha512"
     },
     "Newtonsoft.Json/12.0.3": {
       "type": "package",

@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "ZvMRl5PWvpUea9bsHZI6h7cL4DH+LLhcp0I6VRCy7Rh0TSOwUDC+ODUQU1YNH/rAQ9g39iy+pYic3XdYaf1OxA==",
+  "dgSpecHash": "+DHVFLZvq0tH4mO82iaEkVjoOlC38ZYNylAMLMDJ6fLSvrqOGacXEfqR1Bv39Iwk6tB69z1MI8sPpwX6RiVNlQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\fatih\\source\\repos\\fatiheCommerce.OnContainers\\BuildingBlocks\\RabbitMQEventBus\\RabbitMQEventBus.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\fatih\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\3.1.7\\microsoft.extensions.logging.abstractions.3.1.7.nupkg.sha512",
     "C:\\Users\\fatih\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512",
     "C:\\Users\\fatih\\.nuget\\packages\\rabbitmq.client\\6.2.1\\rabbitmq.client.6.2.1.nupkg.sha512",
     "C:\\Users\\fatih\\.nuget\\packages\\system.memory\\4.5.4\\system.memory.4.5.4.nupkg.sha512",

@@ -14,6 +14,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Console;
+using Microsoft.Extensions.Logging.Debug;
 using Microsoft.Extensions.Options;
 using RabbitMQEventBus;
 
@@ -33,7 +35,23 @@ namespace Catalog.API
         {
             var s = Configuration["ConnectionString"];
 
-            services.AddSingleton<IEventBus, EventBusRabbitMQ>();
+            services.AddLogging(config =>
+            {
+                config.AddDebug(); // Log to debug (debug window in Visual Studio or any debugger attached)
+                config.AddConsole(); // Log to console (colored !)
+            })
+            .Configure<LoggerFilterOptions>(options =>
+            {
+                
+                
+            })
+            .AddSingleton<IEventBus, EventBusRabbitMQ>(sp =>
+            {                  
+                var logger = sp.GetRequiredService<ILogger<EventBusRabbitMQ>>();
+
+                return new EventBusRabbitMQ("Catalog", logger);
+            });
+            
             services.AddSwaggerGen(options =>
             {
                 options.DescribeAllEnumsAsStrings();
@@ -78,6 +96,14 @@ namespace Catalog.API
             {
                 endpoints.MapControllers();
             });
+
+            this.ConfigureEventBus(app);
+        }
+
+        protected virtual void ConfigureEventBus(IApplicationBuilder app)
+        {
+            var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
+            eventBus.StartConsuming();
         }
     }
 }
