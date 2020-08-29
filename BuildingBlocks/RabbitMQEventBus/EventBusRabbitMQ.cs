@@ -20,12 +20,12 @@ namespace RabbitMQEventBus
         private IModel _consumerChannel;
         private string _queueName;
         private readonly ILogger<EventBusRabbitMQ> _logger;
-        private List<string> _subscriptions;
+        private List<string> _subscriptions = new List<string>();
 
         public EventBusRabbitMQ(string queueName, ILogger<EventBusRabbitMQ> logger = null) 
         {
             this._logger = logger;
-
+        
             if(logger == null)
                 this._logger = NullLogger<EventBusRabbitMQ>.Instance;
 
@@ -62,6 +62,8 @@ namespace RabbitMQEventBus
         private void Message_Received(object sender, BasicDeliverEventArgs e)
         {
             _logger.LogInformation(" [x] Message received");
+
+            
         }
 
          public void StartConsuming()
@@ -87,6 +89,7 @@ namespace RabbitMQEventBus
             //Ben bu routingKey'i de bu exchange'e bağlıyorum.
             this._consumerChannel.QueueBind(this._queueName, this.exchange_Name, routingKey, null);
             this._subscriptions.Add(routingKey);
+            _logger.LogInformation(" [x] This queue subscribed to this routingKey: {0}", routingKey);
         }
     }
 }

@@ -110,6 +110,7 @@ namespace Basket.API
         {
             var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
             eventBus.StartConsuming();
+            eventBus.Subscribe("ProductPriceChangedIntegrationEvent");
         }
     }
 }
