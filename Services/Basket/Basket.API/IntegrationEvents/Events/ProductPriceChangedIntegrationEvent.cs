@@ -1,4 +1,6 @@
 
+using EventBus.Events;
+
 namespace Basket.API.IntegrationEvents.Events
 {
     public class ProductPriceChangedIntegrationEvent : IntegrationEvent
