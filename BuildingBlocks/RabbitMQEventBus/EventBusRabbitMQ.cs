@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Text;
 using EventBus.Abstractions;
 using EventBus.Events;
@@ -14,9 +15,12 @@ namespace RabbitMQEventBus
         private readonly string rabbitMQ_hostName = "localhost";
         private readonly string exchange_Name = "eshop_exchange";
         //Hep aynı consumerchannel'ı kullanmak durumundayız.
+        //Cunku dispose ediliyor.
+    
         private IModel _consumerChannel;
         private string _queueName;
         private readonly ILogger<EventBusRabbitMQ> _logger;
+        private List<string> _subscriptions;
 
         public EventBusRabbitMQ(string queueName, ILogger<EventBusRabbitMQ> logger = null) 
         {
@@ -35,13 +39,15 @@ namespace RabbitMQEventBus
             _logger.LogInformation(" [X] INFO FROM EventBusRabbitMQ:" +
                             "Published new event {0}", JsonConvert.SerializeObject(@event));   
 
+            _logger.LogInformation(" [X] Routing key of most recenlty published message: {0}", @event.GetType().Name);   
+
             var factory = new ConnectionFactory() { HostName = rabbitMQ_hostName };
 
             using(var connection = factory.CreateConnection())
             {
                 using(var channel = connection.CreateModel())
                 {
-                    channel.ExchangeDeclare(exchange: this.exchange_Name, ExchangeType.Fanout);
+                    channel.ExchangeDeclare(exchange: this.exchange_Name, ExchangeType.Direct);
 
                     var message = JsonConvert.SerializeObject(@event);
                     var body = Encoding.UTF8.GetBytes(message);
@@ -65,11 +71,9 @@ namespace RabbitMQEventBus
             var connection = factory.CreateConnection();
             this._consumerChannel = connection.CreateModel();
 
-            this._consumerChannel.ExchangeDeclare(exchange: this.exchange_Name, ExchangeType.Fanout);
+            this._consumerChannel.ExchangeDeclare(exchange: this.exchange_Name, ExchangeType.Direct);
 
             this._consumerChannel.QueueDeclare(this._queueName, false, false, false, null);
-
-            this._consumerChannel.QueueBind(this._queueName, this.exchange_Name, "", null);
             
             var consumer = new EventingBasicConsumer(this._consumerChannel);
 
@@ -78,5 +82,11 @@ namespace RabbitMQEventBus
             this._consumerChannel.BasicConsume(this._queueName, false, consumer);
         }
 
+        public void Subscribe(string routingKey)
+        {   
+            //Ben bu routingKey'i de bu exchange'e bağlıyorum.
+            this._consumerChannel.QueueBind(this._queueName, this.exchange_Name, routingKey, null);
+            this._subscriptions.Add(routingKey);
+        }
     }
 }
