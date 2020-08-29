@@ -9,9 +9,9 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/Catalog.API/bin/Debug/netcoreapp3.1/Catalog.API.dll",
+            "program": "${workspaceFolder}/Services/Catalog/Catalog.API/bin/Debug/netcoreapp3.1/Catalog.API.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/Catalog.API",
+            "cwd": "${workspaceFolder}/Services/Catalog/Catalog.API",
             "stopAtEntry": false,
             "serverReadyAction": {
                 "action": "openExternally",

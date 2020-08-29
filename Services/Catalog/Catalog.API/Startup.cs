@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Catalog.API.Model;
+using EventBus.Abstractions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -14,6 +15,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using RabbitMQEventBus;
 
 namespace Catalog.API
 {
@@ -31,7 +33,7 @@ namespace Catalog.API
         {
             var s = Configuration["ConnectionString"];
 
-
+            services.AddSingleton<IEventBus, EventBusRabbitMQ>();
             services.AddSwaggerGen(options =>
             {
                 options.DescribeAllEnumsAsStrings();

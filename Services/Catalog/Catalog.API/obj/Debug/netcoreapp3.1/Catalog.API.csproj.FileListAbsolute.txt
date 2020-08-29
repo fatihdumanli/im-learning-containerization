@@ -138,3 +138,7 @@ C:\Users\fatih\source\repos\fatiheCommerce.OnContainers\Services\Catalog\Catalog
 C:\Users\fatih\source\repos\fatiheCommerce.OnContainers\Services\Catalog\Catalog.API\obj\Debug\netcoreapp3.1\staticwebassets\Catalog.API.StaticWebAssets.Manifest.cache
 C:\Users\fatih\source\repos\fatiheCommerce.OnContainers\Services\Catalog\Catalog.API\obj\Debug\netcoreapp3.1\staticwebassets\Catalog.API.StaticWebAssets.xml
 C:\Users\fatih\source\repos\fatiheCommerce.OnContainers\Services\Catalog\Catalog.API\obj\Debug\netcoreapp3.1\Catalog.API.genruntimeconfig.cache
+C:\Users\fatih\source\repos\fatiheCommerce.OnContainers\Services\Catalog\Catalog.API\bin\Debug\netcoreapp3.1\RabbitMQ.Client.dll
+C:\Users\fatih\source\repos\fatiheCommerce.OnContainers\Services\Catalog\Catalog.API\bin\Debug\netcoreapp3.1\System.Threading.Channels.dll
+C:\Users\fatih\source\repos\fatiheCommerce.OnContainers\Services\Catalog\Catalog.API\bin\Debug\netcoreapp3.1\RabbitMQEventBus.dll
+C:\Users\fatih\source\repos\fatiheCommerce.OnContainers\Services\Catalog\Catalog.API\bin\Debug\netcoreapp3.1\RabbitMQEventBus.pdb

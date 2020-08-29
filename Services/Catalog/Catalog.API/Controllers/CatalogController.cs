@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Catalog.API.IntegrationEvents;
 using Catalog.API.Model;
 using Catalog.API.ViewModel;
+using EventBus.Abstractions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -18,11 +19,13 @@ namespace Catalog.API.Controllers
     public class CatalogController : ControllerBase
     {
         private readonly CatalogContext _catalogContext;
+        private readonly IEventBus _eventBus;
         //private readonly CatalogSettings _settings;
         //private readonly ICatalogIntegrationEventService _catalogIntegrationService;
 
-        public CatalogController(CatalogContext context) 
+        public CatalogController(CatalogContext context, IEventBus eventBus) 
         {
+            this._eventBus = eventBus;
             _catalogContext = context ?? throw new ArgumentNullException(nameof(context));
             context.ChangeTracker.QueryTrackingBehavior = Microsoft.EntityFrameworkCore.QueryTrackingBehavior.NoTracking;
         }
@@ -233,7 +236,9 @@ namespace Catalog.API.Controllers
                 var productPriceChangeEvent = new ProductPriceChangedIntegrationEvent(productToUpdate.Id,
                     oldPrice, productToUpdate.Price);
 
-            
+
+                _eventBus.Publish(productPriceChangeEvent);  
+                await _catalogContext.SaveChangesAsync();      
                 // Achieving atomicity between original Catalog database operation and the IntegrationEventLog thanks to a local transaction
                 //await _catalogIntegrationEventService.SaveEventAndCatalogContextChangesAsync(priceChangedEvent);
 
