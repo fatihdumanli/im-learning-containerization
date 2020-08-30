@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using Autofac;
 using EventBus;
 using EventBus.Abstractions;
 using EventBus.Events;
@@ -22,11 +24,15 @@ namespace RabbitMQEventBus
         private IModel _consumerChannel;
         private string _queueName;
         private readonly ILogger<EventBusRabbitMQ> _logger;
-        private List<Subscription> _subscriptions = new List<Subscription>();
+        private readonly IEventBusSubscriptionManager _subsManager;
 
-        public EventBusRabbitMQ(string queueName, ILogger<EventBusRabbitMQ> logger = null) 
+        
+        public EventBusRabbitMQ(string queueName, 
+            IEventBusSubscriptionManager subsManager,
+            ILogger<EventBusRabbitMQ> logger = null) 
         {
             this._logger = logger;
+            this._subsManager = subsManager;
         
             if(logger == null)
                 this._logger = NullLogger<EventBusRabbitMQ>.Instance;
@@ -61,16 +67,7 @@ namespace RabbitMQEventBus
         }
 
        
-        private void Message_Received(object sender, BasicDeliverEventArgs e)
-        {
-            _logger.LogInformation(" [x] Message received");
-
-            //Bir string var, bu stringe göre bir class'ın bir methodunu çağırmak istiyoruz.
-            
-            
-
-        }
-
+    
          public void StartConsuming()
         {
 
@@ -86,18 +83,39 @@ namespace RabbitMQEventBus
 
             consumer.Received += Message_Received;
 
-            this._consumerChannel.BasicConsume(this._queueName, false, consumer);
+            this._consumerChannel.BasicConsume(this._queueName, true, consumer);
         }
 
-        public void Subscribe(string routingKey, Type eventHandler)
-        {   
-            //Ben bu routingKey'e sahip olan mesajların da kuyruğuma gelmesini istiyorum. (Basket, Catalog etc.)
+        private void Message_Received(object sender, BasicDeliverEventArgs e)
+        {
+            _logger.LogInformation(" [x] Message received: {0}", e.RoutingKey);
+
+            //Bir string var, bu stringe göre bir class'ın bir methodunu çağırmak istiyoruz.
+            var body = e.Body.ToArray();
+            var message = Encoding.UTF8.GetString(body);
+            var integrationEvent = JsonConvert.DeserializeObject(message);
+
+            //subsManager.getHandlerType()
+            //Todo: handler.invoke.
+            
+        }
+
+
+        public void Subscribe<TE, TH>()
+            where TE : IntegrationEvent
+            where TH : IIntegrationEventHandler<TE>
+        {
+             string routingKey = typeof(TE).GetType().Name;
+
+            _subsManager.AddSubscription<TE, TH>();
+            
+            var handler = _subsManager.GetHandlerType(routingKey);
+            
+            //internalSubscription, bu routing Key'deki mesajlarla ilgileniyorum, queue'ma gelsin.
             this._consumerChannel.QueueBind(this._queueName, this.exchange_Name, routingKey, null);
-            this._subscriptions.Add(new Subscription(evtName: routingKey, evtHandler: eventHandler));
-            _logger.LogInformation(" [x] Queue {0} subscribed for routingKey: {1} with eventHandler: {2}",
-                 this._queueName, routingKey, eventHandler.ToString());
-        }
 
-       
+            _logger.LogInformation(" [x] Queue {0} subscribed for routingKey: {1} with eventHandler: {2}",
+                 this._queueName, routingKey, typeof(TH).GetType().Name);
+        }
     }
 }

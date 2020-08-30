@@ -6,6 +6,11 @@ namespace Basket.API.IntegrationEvents.EventHandling
 {
     public class ProductPriceChangedIntegrationEventHandler : IIntegrationEventHandler<ProductPriceChangedIntegrationEvent>
     {
+        public IIntegrationEventHandler<ProductPriceChangedIntegrationEvent> GetInstance()
+        {
+            return new ProductPriceChangedIntegrationEventHandler();
+        }
+
         public Task Handle(ProductPriceChangedIntegrationEvent @event)
         {
             //HANDLE logic

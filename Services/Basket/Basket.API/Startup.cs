@@ -4,8 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Basket.API.Infrastructure.Repository;
 using Basket.API.IntegrationEvents.EventHandling;
+using Basket.API.IntegrationEvents.Events;
 using Basket.API.Model;
 using Basket.API.Services;
+using EventBus;
 using EventBus.Abstractions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -36,6 +38,11 @@ namespace Basket.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddSingleton<IEventBusSubscriptionManager, InMemoryEventBusSubscriptionManager>(serviceProvider =>
+            {
+                var logger = serviceProvider.GetRequiredService<ILogger<InMemoryEventBusSubscriptionManager>>();
+                return new InMemoryEventBusSubscriptionManager(logger);
+            });
 
             services.AddLogging(config =>
             {
@@ -50,8 +57,8 @@ namespace Basket.API
             .AddSingleton<IEventBus, EventBusRabbitMQ>(sp =>
             {                  
                 var logger = sp.GetRequiredService<ILogger<EventBusRabbitMQ>>();
-
-                return new EventBusRabbitMQ("Basket", logger);
+                var eventBusSubcriptionsManager = sp.GetRequiredService<IEventBusSubscriptionManager>();
+                return new EventBusRabbitMQ("Basket", eventBusSubcriptionsManager, logger);
             });
 
 
@@ -81,6 +88,11 @@ namespace Basket.API
             });
         }
 
+        private void RegisterEventBus(IServiceCollection services)
+        {
+            throw new NotImplementedException();
+        }
+
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env,
             ILoggerFactory loggerFactory)
@@ -107,13 +119,12 @@ namespace Basket.API
             ConfigureEventBus(app);
         }
 
+        //For registering 
         protected virtual void ConfigureEventBus(IApplicationBuilder app)
         {
             var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
-            eventBus.StartConsuming();
-            eventBus.Subscribe("ProductPriceChangedIntegrationEvent", 
-                typeof(ProductPriceChangedIntegrationEventHandler));
-                
+            eventBus.StartConsuming();  
+            eventBus.Subscribe<ProductPriceChangedIntegrationEvent, ProductPriceChangedIntegrationEventHandler>();
         }
     }
 }

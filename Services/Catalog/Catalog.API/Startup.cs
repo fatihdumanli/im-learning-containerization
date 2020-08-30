@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Catalog.API.Model;
+using EventBus;
 using EventBus.Abstractions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -35,6 +36,13 @@ namespace Catalog.API
         {
             var s = Configuration["ConnectionString"];
 
+
+            services.AddSingleton<IEventBusSubscriptionManager, InMemoryEventBusSubscriptionManager>(serviceProvider =>
+            {
+                var logger = serviceProvider.GetRequiredService<ILogger<InMemoryEventBusSubscriptionManager>>();
+                return new InMemoryEventBusSubscriptionManager(logger);
+            });
+
             services.AddLogging(config =>
             {
                 config.AddDebug(); // Log to debug (debug window in Visual Studio or any debugger attached)
@@ -48,8 +56,9 @@ namespace Catalog.API
             .AddSingleton<IEventBus, EventBusRabbitMQ>(sp =>
             {                  
                 var logger = sp.GetRequiredService<ILogger<EventBusRabbitMQ>>();
+                var subsManager = sp.GetRequiredService<IEventBusSubscriptionManager>();
 
-                return new EventBusRabbitMQ("Catalog", logger);
+                return new EventBusRabbitMQ("Catalog", subsManager, logger);
             });
             
             services.AddSwaggerGen(options =>
