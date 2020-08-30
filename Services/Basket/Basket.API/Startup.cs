@@ -58,7 +58,8 @@ namespace Basket.API
             {                  
                 var logger = sp.GetRequiredService<ILogger<EventBusRabbitMQ>>();
                 var eventBusSubcriptionsManager = sp.GetRequiredService<IEventBusSubscriptionManager>();
-                return new EventBusRabbitMQ("Basket", eventBusSubcriptionsManager, logger);
+                return new EventBusRabbitMQ("Basket", eventBusSubcriptionsManager,
+                     logger);
             });
 
 
@@ -86,6 +87,7 @@ namespace Basket.API
 
                 return ConnectionMultiplexer.Connect(configuration);
             });
+
         }
 
         private void RegisterEventBus(IServiceCollection services)

@@ -1,19 +1,17 @@
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Basket.API.IntegrationEvents.Events;
 using EventBus.Abstractions;
+using Microsoft.Extensions.Logging;
 
 namespace Basket.API.IntegrationEvents.EventHandling
 {
     public class ProductPriceChangedIntegrationEventHandler : IIntegrationEventHandler<ProductPriceChangedIntegrationEvent>
     {
-        public IIntegrationEventHandler<ProductPriceChangedIntegrationEvent> GetInstance()
-        {
-            return new ProductPriceChangedIntegrationEventHandler();
-        }
-
+    
         public Task Handle(ProductPriceChangedIntegrationEvent @event)
         {
-            //HANDLE logic
+            Debug.WriteLine("Handler methoduna girdim.");
             return null;
         }
     }

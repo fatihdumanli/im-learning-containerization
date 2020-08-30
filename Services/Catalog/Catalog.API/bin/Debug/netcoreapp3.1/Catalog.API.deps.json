@@ -309,6 +309,17 @@
           "Catalog.API.dll": {}
         }
       },
+      "Autofac/5.2.0": {
+        "runtime": {
+          "lib/netstandard2.1/Autofac.dll": {
+            "assemblyVersion": "5.2.0.0",
+            "fileVersion": "5.2.0.0"
+          }
+        },
+        "compile": {
+          "lib/netstandard2.1/Autofac.dll": {}
+        }
+      },
       "Microsoft.Bcl.AsyncInterfaces/1.1.1": {
         "runtime": {
           "lib/netstandard2.1/Microsoft.Bcl.AsyncInterfaces.dll": {
@@ -1432,6 +1443,7 @@
       },
       "EventBus/1.0.0": {
         "dependencies": {
+          "Microsoft.Extensions.Logging.Abstractions": "3.1.7",
           "Newtonsoft.Json": "12.0.3"
         },
         "runtime": {
@@ -1443,6 +1455,7 @@
       },
       "RabbitMQEventBus/1.0.0": {
         "dependencies": {
+          "Autofac": "5.2.0",
           "EventBus": "1.0.0",
           "Microsoft.Extensions.Logging.Abstractions": "3.1.7",
           "RabbitMQ.Client": "6.2.1"
@@ -3069,6 +3082,13 @@
       "type": "project",
       "serviceable": false,
       "sha512": ""
+    },
+    "Autofac/5.2.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-V8dBH0dsv75uDzl7Sw+HkhKDPUw2eXnlMjcSVMH+tLo2s67MpTKGyDj1pDcpR+IF2u4YRs0s3/x7R88YJzIWvg==",
+      "path": "autofac/5.2.0",
+      "hashPath": "autofac.5.2.0.nupkg.sha512"
     },
     "Microsoft.Bcl.AsyncInterfaces/1.1.1": {
       "type": "package",

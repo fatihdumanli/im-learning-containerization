@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Autofac;
 using Catalog.API.Model;
 using EventBus;
 using EventBus.Abstractions;
@@ -57,8 +58,9 @@ namespace Catalog.API
             {                  
                 var logger = sp.GetRequiredService<ILogger<EventBusRabbitMQ>>();
                 var subsManager = sp.GetRequiredService<IEventBusSubscriptionManager>();
-
-                return new EventBusRabbitMQ("Catalog", subsManager, logger);
+                
+                return new EventBusRabbitMQ("Catalog", subsManager,
+                     logger);
             });
             
             services.AddSwaggerGen(options =>

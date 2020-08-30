@@ -22,8 +22,8 @@ namespace EventBus
 
         public Type GetHandlerType(string eventName)
         {
-            
-            return null;     
+            var sub = _subscriptions.Where(sub => sub.Event.Name == eventName).SingleOrDefault();
+            return sub.EventHandlerType;                        
         }
 
         public void AddSubscription<TE, TH>()
@@ -36,16 +36,28 @@ namespace EventBus
             "AddSubscription<TE, TH>()");
 
             _logger.LogInformation(" \t [.] {0} - {1} added to subscription collection.",
-                typeof(TE).GetType().Name, typeof(TH).GetType().Name);
+                typeof(TE).Name, typeof(TH).Name);
 
             _logger.LogInformation(" \t\t Subscription list:");
 
             foreach(var subInfo in this._subscriptions)
             {
-                _logger.LogInformation(" \t\t\t Event: {0}, Handler: {1}", subInfo.Event, 
-                    subInfo.EventHandlerType);
+                _logger.LogInformation(" \t\t\t Event: {0}, Handler: {1}", subInfo.Event.Name, 
+                    subInfo.EventHandlerType.Name);
             }
 
+        }
+
+        public bool HasSubscription(string eventName)
+        {
+            var eventList = this._subscriptions.Select(s => s.Event.Name).ToList();
+            return eventList.Contains(eventName);
+        }
+
+        public Type GetEventType(string eventName)
+        {
+            var sub = _subscriptions.Where(sub => sub.Event.Name == eventName).SingleOrDefault();
+            return sub.Event;         
         }
     }
 
