@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Basket.API.Infrastructure.Repository;
+using Basket.API.IntegrationEvents.EventHandling;
 using Basket.API.Model;
 using Basket.API.Services;
 using EventBus.Abstractions;
@@ -110,7 +111,9 @@ namespace Basket.API
         {
             var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
             eventBus.StartConsuming();
-            eventBus.Subscribe("ProductPriceChangedIntegrationEvent", typeof(WeatherForecast));
+            eventBus.Subscribe("ProductPriceChangedIntegrationEvent", 
+                typeof(ProductPriceChangedIntegrationEventHandler));
+                
         }
     }
 }
