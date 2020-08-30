@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Text;
+using EventBus;
 using EventBus.Abstractions;
 using EventBus.Events;
 using Microsoft.Extensions.Logging;
@@ -20,7 +22,7 @@ namespace RabbitMQEventBus
         private IModel _consumerChannel;
         private string _queueName;
         private readonly ILogger<EventBusRabbitMQ> _logger;
-        private List<string> _subscriptions = new List<string>();
+        private List<Subscription> _subscriptions = new List<Subscription>();
 
         public EventBusRabbitMQ(string queueName, ILogger<EventBusRabbitMQ> logger = null) 
         {
@@ -63,7 +65,10 @@ namespace RabbitMQEventBus
         {
             _logger.LogInformation(" [x] Message received");
 
+            //Bir string var, bu stringe göre bir class'ın bir methodunu çağırmak istiyoruz.
             
+            
+
         }
 
          public void StartConsuming()
@@ -84,12 +89,15 @@ namespace RabbitMQEventBus
             this._consumerChannel.BasicConsume(this._queueName, false, consumer);
         }
 
-        public void Subscribe(string routingKey)
+        public void Subscribe(string routingKey, Type eventHandler)
         {   
-            //Ben bu routingKey'i de bu exchange'e bağlıyorum.
+            //Ben bu routingKey'e sahip olan mesajların da kuyruğuma gelmesini istiyorum. (Basket, Catalog etc.)
             this._consumerChannel.QueueBind(this._queueName, this.exchange_Name, routingKey, null);
-            this._subscriptions.Add(routingKey);
-            _logger.LogInformation(" [x] This queue subscribed to this routingKey: {0}", routingKey);
+            this._subscriptions.Add(new Subscription(evtName: routingKey, evtHandler: eventHandler));
+            _logger.LogInformation(" [x] Queue {0} subscribed for routingKey: {1} with eventHandler: {2}",
+                 this._queueName, routingKey, eventHandler.ToString());
         }
+
+       
     }
 }

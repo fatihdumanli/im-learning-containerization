@@ -9,7 +9,7 @@ namespace EventBus.Abstractions
     {
         
         void Publish(IntegrationEvent @event);    
-        void Subscribe(string routingKey);
+        void Subscribe(string routingKey, Type eventHandler);
         void StartConsuming();
     }
 }
