@@ -102,7 +102,6 @@ namespace RabbitMQEventBus
             this._consumerChannel.BasicConsume(this._queueName, true, consumer);
         }
 
-
         private void Message_Received(object sender, BasicDeliverEventArgs e)
         {
             _logger.LogInformation(" [x] Message received: {0} to queue {1}.",
@@ -127,9 +126,7 @@ namespace RabbitMQEventBus
             var instance = Activator.CreateInstance(type);
             _logger.LogInformation(" [x] Created instance: {0}", instance);
 
-            //var concreteType = typeof(IIntegrationEventHandler<>).MakeGenericType(type);
-
-            
+            //var concreteType = typeof(IIntegrationEventHandler<>).MakeGenericType(type);    
             type.GetMethod("Handle").Invoke(instance, new object[] { integrationEvent });       
         }
 
