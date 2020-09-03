@@ -1,1 +1,2 @@
 C:\Users\fatih\source\repos\Catalog.API\obj\Debug\docker-compose.dcproj.CoreCompileInputs.cache
+C:\Users\fatih\source\repos\fatiheCommerce.OnContainers\obj\Debug\docker-compose.dcproj.CoreCompileInputs.cache

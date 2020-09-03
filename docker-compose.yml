@@ -1,13 +1,13 @@
 version: '3.4'
 
 services:
-    envoygateway:
-        build: ApiGateway/
+    apigateway:
+        image: "apigateway:latest"
         ports:
-            - "10000:10000"
-            - "9901:9901"
+            - "10000:80"
+            - "10001:80"
         volumes:
-            - ./ApiGateway/envoy.yaml:/etc/envoy/envoy.yaml
+            - ./ApiGateway/ocelot.json:/etc/ocelot/ocelot.json
 
     catalogapi:
         image: "catalogapi:dev"

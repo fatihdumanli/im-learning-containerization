@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Autofac;
+using Autofac.Extensions.DependencyInjection;
 using Catalog.API.Model;
 using EventBus;
 using EventBus.Abstractions;
@@ -25,6 +26,12 @@ namespace Catalog.API
 {
     public class Startup
     {
+        public ILifetimeScope AutofacContainer { get; private set; }
+
+        public void ConfigureContainer(ContainerBuilder builder)
+        {        
+        }
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -37,6 +44,14 @@ namespace Catalog.API
         {
             var s = Configuration["ConnectionString"];
 
+            services.AddSingleton<IEventBus, EventBusRabbitMQ>(sp =>
+            {                  
+                var logger = sp.GetRequiredService<ILogger<EventBusRabbitMQ>>();
+                var subsManager = sp.GetRequiredService<IEventBusSubscriptionManager>();
+                var autofac = sp.GetRequiredService<ILifetimeScope>();
+                return new EventBusRabbitMQ("Catalog", subsManager, autofac,
+                     logger);
+            });
 
             services.AddSingleton<IEventBusSubscriptionManager, InMemoryEventBusSubscriptionManager>(serviceProvider =>
             {
@@ -49,19 +64,10 @@ namespace Catalog.API
                 config.AddDebug(); // Log to debug (debug window in Visual Studio or any debugger attached)
                 config.AddConsole(); // Log to console (colored !)
             })
-            .Configure<LoggerFilterOptions>(options =>
-            {
+            .Configure<LoggerFilterOptions>(options => {             
                 
-                
-            })
-            .AddSingleton<IEventBus, EventBusRabbitMQ>(sp =>
-            {                  
-                var logger = sp.GetRequiredService<ILogger<EventBusRabbitMQ>>();
-                var subsManager = sp.GetRequiredService<IEventBusSubscriptionManager>();
-                
-                return new EventBusRabbitMQ("Catalog", subsManager,
-                     logger);
             });
+         
             
             services.AddSwaggerGen(options =>
             {
@@ -90,6 +96,7 @@ namespace Catalog.API
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            this.AutofacContainer = app.ApplicationServices.GetAutofacRoot();
             app.UseSwagger().UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API v1.0"));
             if (env.IsDevelopment())
             {

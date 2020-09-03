@@ -31,11 +31,13 @@ namespace RabbitMQEventBus
 
         public EventBusRabbitMQ(string queueName, 
             IEventBusSubscriptionManager subsManager,
+            ILifetimeScope autoFac,
             ILogger<EventBusRabbitMQ> logger = null) 
         {
             this._logger = logger;
             this._subsManager = subsManager;
-        
+            this._autofac = autoFac;
+            
             if(logger == null)
                 this._logger = NullLogger<EventBusRabbitMQ>.Instance;
 
@@ -122,12 +124,14 @@ namespace RabbitMQEventBus
 
             Type type = _subsManager.GetHandlerType(e.RoutingKey);
 
+            var scope = _autofac.BeginLifetimeScope();
+            _logger.LogInformation(" [x] Scope: {0}", scope.GetType());
+            var handler = scope.ResolveOptional(type);
+            _logger.LogInformation(" [x] Handler: {0}", handler.GetType());
+            type.GetMethod("Handle").Invoke(handler, new object[] { integrationEvent }); 
             
-            var instance = Activator.CreateInstance(type);
-            _logger.LogInformation(" [x] Created instance: {0}", instance);
 
             //var concreteType = typeof(IIntegrationEventHandler<>).MakeGenericType(type);    
-            type.GetMethod("Handle").Invoke(instance, new object[] { integrationEvent });       
         }
 
 

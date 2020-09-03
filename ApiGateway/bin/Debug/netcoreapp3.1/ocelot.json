@@ -1,0 +1,45 @@
+{
+    "Routes": [
+        {
+            "DownstreamPathTemplate": "/api/v1/Catalog/Items",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [{
+                "Host": "localhost",
+                "Port": 5001
+            }],
+            "UpstreamPathTemplate": "/c/items"
+        },
+        {
+            "DownstreamPathTemplate": "/api/v1/Catalog/Items/{id}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [{
+                "Host": "localhost",
+                "Port": 5001
+            }],
+            "UpstreamPathTemplate": "/c/items/{id}"
+        },
+        {
+            "DownstreamPathTemplate": "/api/Basket/{id}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [{
+                "Host": "localhost",
+                "Port": 5002
+            }],
+            "UpstreamPathTemplate": "/b/{id}"
+        },
+        {
+            "DownstreamPathTemplate": "/api/Basket",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [{
+                "Host": "localhost",
+                "Port": 5002
+            }],
+            "UpstreamPathTemplate": "/b"
+        }
+        
+    ],
+
+    "GlobalConfiguration": {
+        "BaseUrl": "http://localhost:10000"
+    }
+}

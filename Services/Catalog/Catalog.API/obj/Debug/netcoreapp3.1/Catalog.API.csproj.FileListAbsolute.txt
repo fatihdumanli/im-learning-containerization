@@ -143,3 +143,4 @@ C:\Users\fatih\source\repos\fatiheCommerce.OnContainers\Services\Catalog\Catalog
 C:\Users\fatih\source\repos\fatiheCommerce.OnContainers\Services\Catalog\Catalog.API\bin\Debug\netcoreapp3.1\RabbitMQEventBus.dll
 C:\Users\fatih\source\repos\fatiheCommerce.OnContainers\Services\Catalog\Catalog.API\bin\Debug\netcoreapp3.1\RabbitMQEventBus.pdb
 C:\Users\fatih\source\repos\fatiheCommerce.OnContainers\Services\Catalog\Catalog.API\bin\Debug\netcoreapp3.1\Autofac.dll
+C:\Users\fatih\source\repos\fatiheCommerce.OnContainers\Services\Catalog\Catalog.API\bin\Debug\netcoreapp3.1\Autofac.Extensions.DependencyInjection.dll
