@@ -16,7 +16,7 @@ namespace RabbitMQEventBus
 {
     public class EventBusRabbitMQ : IEventBus
     {
-        private readonly string rabbitMQ_hostName = "localhost";
+        private readonly string rabbitMQ_hostName = "eventbus";
         private readonly string exchange_Name = "eshop_exchange";
         //Hep aynı consumerchannel'ı kullanmak durumundayız.
         //Cunku dispose ediliyor.

@@ -255,7 +255,7 @@ namespace Catalog.API.Controllers
                 await _catalogContext.SaveChangesAsync();
             }
 
-            return Created("/items", catalogItem.Id);
+            return Ok();
         }
 
         //POST api/v1/[controller]/items

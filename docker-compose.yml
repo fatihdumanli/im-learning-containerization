@@ -18,6 +18,7 @@ services:
         depends_on: 
         - sqldata
         - eventbus
+        restart: on-failure
     basketapi:
         image: "basketapi:dev"
         ports:
@@ -25,6 +26,7 @@ services:
         depends_on:
             - basketdata
             - eventbus
+        restart: on-failure
     sqldata:
         image: "microsoft/mssql-server-linux"
         environment: 
@@ -40,3 +42,4 @@ services:
         image: "rabbitmq"
         ports: 
             - "5672:5672"
+            - "15672:15672"

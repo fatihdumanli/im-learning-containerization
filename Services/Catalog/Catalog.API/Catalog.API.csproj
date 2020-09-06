@@ -5,12 +5,8 @@
     <UserSecretsId>68ccbd2e-1dda-4bab-820f-261a346c00d8</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
+    <DockerfileContext>..\..\..</DockerfileContext>
   </PropertyGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\BuildingBlocks\EventBus\EventBus.csproj" />
-    <ProjectReference Include="..\..\..\BuildingBlocks\RabbitMQEventBus\RabbitMQEventBus.csproj" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Autofac" Version="5.2.0" />
@@ -29,6 +25,11 @@
 
   <ItemGroup>
     <Folder Include="IntegrationEvents\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\BuildingBlocks\EventBus\EventBus.csproj" />
+    <ProjectReference Include="..\..\..\BuildingBlocks\RabbitMQEventBus\RabbitMQEventBus.csproj" />
   </ItemGroup>
 
 
