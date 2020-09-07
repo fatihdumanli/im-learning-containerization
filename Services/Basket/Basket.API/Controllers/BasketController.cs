@@ -4,8 +4,10 @@ using System.Linq;
 using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Basket.API.IntegrationEvents.Events;
 using Basket.API.Model;
 using Basket.API.Services;
+using EventBus.Abstractions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -18,16 +20,18 @@ namespace Basket.API.Controllers
     {
         private readonly IBasketRepository _repository;
         private readonly IIdentityService _identityService;
-        //private readonly IEventBus _eventBus;
+        private readonly IEventBus _eventBus;
         private ILogger<BasketController> _logger;
 
         public BasketController(IBasketRepository repository,
             ILogger<BasketController> logger,
-            IIdentityService identityService)
+            IIdentityService identityService,
+            IEventBus eventBus)
         {
             _repository = repository;
             _logger = logger;
             _identityService = identityService;
+            _eventBus = eventBus;
         }
 
         [HttpGet("{id}")]
@@ -53,7 +57,7 @@ namespace Basket.API.Controllers
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<ActionResult> CheckoutAsync([FromBody]BasketCheckout basketCheckout, [FromHeader(Name = "x-requestid")] string requestId)
         {
-            var userId = _identityService.GetUserIdentity();
+            var userId = basketCheckout.Buyer;
 
             basketCheckout.RequestId = (Guid.TryParse(requestId, out Guid guid) && guid != Guid.Empty) ?
                 guid : basketCheckout.RequestId;
@@ -65,23 +69,26 @@ namespace Basket.API.Controllers
                 return BadRequest();
             }
 
-            var userName = this.HttpContext.User.FindFirst(x => x.Type == ClaimTypes.Name).Value;
+            var userName = userId;
 
-/*
-            var eventMessage = new UserCheckoutAcceptedIntegrationEvent(userId, userName, basketCheckout.City, basketCheckout.Street,
-                basketCheckout.State, basketCheckout.Country, basketCheckout.ZipCode, basketCheckout.CardNumber, basketCheckout.CardHolderName,
-                basketCheckout.CardExpiration, basketCheckout.CardSecurityNumber, basketCheckout.CardTypeId, basketCheckout.Buyer, basketCheckout.RequestId, basket);
-*/
+            var checkoutEventMessage = new UserCheckoutAcceptedIntegrationEvent(userId: userId,
+                userName: userName, city: basketCheckout.City, street: basketCheckout.Street,
+                state: basketCheckout.State, country: basketCheckout.Country,
+                zipCode: basketCheckout.ZipCode, cardNumber: basketCheckout.CardNumber, cardHolderName: basketCheckout.CardHolderName,
+                cardExpiration: basketCheckout.CardExpiration, cardSecurityNumber: basketCheckout.CardSecurityNumber,
+                cardTypeId: basketCheckout.CardTypeId, buyer: userName, requestId: basketCheckout.RequestId,
+                basket: basket);
+
             // Once basket is checkout, sends an integration event to
             // ordering.api to convert basket to order and proceeds with
             // order creation process
             try
             {
-                //_eventBus.Publish(eventMessage);
+                 _eventBus.Publish(checkoutEventMessage);
             }
             catch (Exception ex)
             {
-                //_logger.LogError(ex, "ERROR Publishing integration event: {IntegrationEventId} from {AppName}", eventMessage.Id, Program.AppName);
+                _logger.LogError(ex, "ERROR Publishing integration event: {IntegrationEventId} from Basket", checkoutEventMessage.Id);
 
                 throw;
             }

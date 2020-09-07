@@ -32,11 +32,13 @@ namespace RabbitMQEventBus
         public EventBusRabbitMQ(string queueName, 
             IEventBusSubscriptionManager subsManager,
             ILifetimeScope autoFac,
+            string rabbitMqServer = "eventbus",
             ILogger<EventBusRabbitMQ> logger = null) 
         {
             this._logger = logger;
             this._subsManager = subsManager;
             this._autofac = autoFac;
+            this.rabbitMQ_hostName = rabbitMqServer;
             
             if(logger == null)
                 this._logger = NullLogger<EventBusRabbitMQ>.Instance;

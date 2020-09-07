@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Basket.API.Services
@@ -17,7 +18,7 @@ namespace Basket.API.Services
         }
         public string GetUserIdentity()
         {
-            return _context.HttpContext.User.FindFirst("sub").Value;
+            return _context.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
         }
     }
 }

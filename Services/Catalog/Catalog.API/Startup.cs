@@ -49,7 +49,9 @@ namespace Catalog.API
                 var logger = sp.GetRequiredService<ILogger<EventBusRabbitMQ>>();
                 var subsManager = sp.GetRequiredService<IEventBusSubscriptionManager>();
                 var autofac = sp.GetRequiredService<ILifetimeScope>();
-                return new EventBusRabbitMQ("Catalog", subsManager, autofac,
+                var rabbitMqEndpoint = Configuration["RabbitMQServer"];
+
+                return new EventBusRabbitMQ("Catalog", subsManager, autofac, rabbitMqEndpoint,
                      logger);
             });
 

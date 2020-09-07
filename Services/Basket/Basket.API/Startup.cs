@@ -32,9 +32,10 @@ namespace Basket.API
       
         public IServiceCollection AddRabbitMqConnection(IServiceCollection services)
         {
+            var redisServer = Configuration["RediServer"];
             services.AddSingleton<ConnectionMultiplexer>(sp =>
             {
-                string connString = "basketdata, abortConnect=false";
+                string connString = string.Format("{0}, abortConnect=false", redisServer);
                 var configuration = ConfigurationOptions.Parse(connString, true);
 
                 configuration.ResolveDns = true;
@@ -84,7 +85,9 @@ namespace Basket.API
                 var logger = sp.GetRequiredService<ILogger<EventBusRabbitMQ>>();
                 var subsManager = sp.GetRequiredService<IEventBusSubscriptionManager>();
                 var lifeTimeScope = sp.GetRequiredService<ILifetimeScope>();
-                return new EventBusRabbitMQ("Basket", subsManager, lifeTimeScope, logger);
+                var rabbitMqEndpoint = Configuration["RabbitMQServer"];
+
+                return new EventBusRabbitMQ("Basket", subsManager, lifeTimeScope, rabbitMqEndpoint, logger);
             });
             
             
