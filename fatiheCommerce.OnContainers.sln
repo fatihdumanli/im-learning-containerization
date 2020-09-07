@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Basket.API", "Services\Bask
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalog.API", "Services\Catalog\Catalog.API\Catalog.API.csproj", "{B79A4187-9D46-4130-92F7-B8F36E94B31A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiGateway", "ApiGateway\ApiGateway.csproj", "{EAAAB286-1AF9-48C8-B406-7E8F36D75F71}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiGateway", "ApiGateway\ApiGateway.csproj", "{EAAAB286-1AF9-48C8-B406-7E8F36D75F71}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Order.API", "Services\Order\Order.API\Order.API.csproj", "{6CE95375-00A2-41E4-8418-426DD69A81C1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{EAAAB286-1AF9-48C8-B406-7E8F36D75F71}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EAAAB286-1AF9-48C8-B406-7E8F36D75F71}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EAAAB286-1AF9-48C8-B406-7E8F36D75F71}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6CE95375-00A2-41E4-8418-426DD69A81C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CE95375-00A2-41E4-8418-426DD69A81C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6CE95375-00A2-41E4-8418-426DD69A81C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6CE95375-00A2-41E4-8418-426DD69A81C1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
