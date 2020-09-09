@@ -22,7 +22,11 @@ namespace Order.API.Application.IntegrationEvents.EventHandling
             _logger.LogInformation("\t [.] Inside the UserCheckoutAcceptedIntegrationEventHandler");
 
             //Burada CreateOrderCommand oluşturup, mediatr ile göndereceğiz.
-            var command = new CreateOrderCommand();
+            var command = new CreateOrderCommand(@event.Basket.Items, userId: @event.UserId, userName: @event.UserName, city: @event.City,
+                street: @event.Street, state: @event.State, country: @event.Country, zipCode: @event.ZipCode,
+                cardNumber: @event.CardNumber, cardHolderName: @event.CardHolderName, cardExpiration: @event.CardExpiration,
+                cardSecurityNumber: @event.CardSecurityNumber, cardTypeId: @event.CardTypeId);
+                
             _mediator.Send(command);
 
             return null;
