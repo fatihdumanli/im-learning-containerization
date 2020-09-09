@@ -6,6 +6,7 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using EventBus;
 using EventBus.Abstractions;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -14,8 +15,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Order.API.Application.Command;
 using Order.API.Application.IntegrationEvents.EventHandling;
 using Order.API.Application.IntegrationEvents.Events;
+using Order.API.Infrastructure.AutofacModules;
 using RabbitMQEventBus;
 
 namespace Order.API
@@ -32,6 +35,7 @@ namespace Order.API
         public void ConfigureContainer(ContainerBuilder builder)
         {
             builder.RegisterType<UserCheckoutAcceptedIntegrationEventHandler>();
+            builder.RegisterModule(new MediatorModule());    
         }
 
         public IConfiguration Configuration { get; }
