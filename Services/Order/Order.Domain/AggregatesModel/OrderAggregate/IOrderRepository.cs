@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Ordering.Domain.SharedKernel;
 
 namespace Ordering.Domain.AggregatesModel.OrderAggregate
