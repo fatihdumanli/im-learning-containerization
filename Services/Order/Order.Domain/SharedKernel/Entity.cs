@@ -1,6 +1,6 @@
 using System;
 
-namespace Order.Domain.SharedKernel
+namespace Ordering.Domain.SharedKernel
 {
     public abstract class Entity
     {

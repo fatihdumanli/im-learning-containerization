@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace Order.Domain.SharedKernel
+namespace Ordering.Domain.SharedKernel
 {
     public interface IUnitOfWork : IDisposable
     {

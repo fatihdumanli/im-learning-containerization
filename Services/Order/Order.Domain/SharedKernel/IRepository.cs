@@ -1,4 +1,4 @@
-namespace Order.Domain.SharedKernel
+namespace Ordering.Domain.SharedKernel
 {
     public interface IRepository<T> where T : IAggregateRoot
     {

@@ -1,4 +1,4 @@
-namespace Order.Domain.SharedKernel
+namespace Ordering.Domain.SharedKernel
 {
     //Marker interface.
     public interface IAggregateRoot { }

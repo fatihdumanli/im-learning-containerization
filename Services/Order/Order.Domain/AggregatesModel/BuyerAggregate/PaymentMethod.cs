@@ -1,8 +1,8 @@
 using System;
-using Order.Domain.Exceptions;
-using Order.Domain.SharedKernel;
+using Ordering.Domain.Exceptions;
+using Ordering.Domain.SharedKernel;
 
-namespace Order.Domain.AggregatesModel.BuyerAggregate
+namespace Ordering.Domain.AggregatesModel.BuyerAggregate
 {
     public class PaymentMethod : Entity
     {

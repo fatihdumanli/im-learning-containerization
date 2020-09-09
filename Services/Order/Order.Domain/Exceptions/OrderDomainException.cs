@@ -1,6 +1,6 @@
 using System;
 
-namespace Order.Domain.Exceptions
+namespace Ordering.Domain.Exceptions
 {
     public class OrderDomainException : Exception
     {

@@ -1,6 +1,6 @@
-using Order.Domain.SharedKernel;
+using Ordering.Domain.SharedKernel;
 
-namespace Order.Domain.AggregatesModel.BuyerAggregate
+namespace Ordering.Domain.AggregatesModel.BuyerAggregate
 {
     public class CardType : Enumeration
     {
