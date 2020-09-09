@@ -13,9 +13,19 @@ namespace Order.API.Application.Command
         {
             this._logger = logger;
         }
-
+        /*
+            1. Instantiate new Address valueObject
+            2. Instantiate new Order aggregate root.
+        */
         public Task<bool> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
         {
+
+            //In request,
+            //--OrderItems.
+            //--General information about order, and address
+
+
+            
             _logger.LogInformation("------- [.] Create Order Command Handler...");
             _logger.LogInformation("REQUEST --> " + JsonConvert.SerializeObject(request));
 

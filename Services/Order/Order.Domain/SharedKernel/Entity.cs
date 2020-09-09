@@ -1,18 +1,20 @@
+using System;
+
 namespace Order.Domain.SharedKernel
 {
     public abstract class Entity
     {
-        int _Id;
+        int _id;
         public virtual int Id
         {
             get 
             {
-                return _Id;
+                return _id;
             }
 
             protected set
             {
-                _Id = value;
+                _id = value;
             }
         }
 

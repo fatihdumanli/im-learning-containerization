@@ -12,7 +12,7 @@ namespace Order.Domain.SharedKernel
             return ReferenceEquals(left, null) || left.Equals(right);
         }
 
-        protected static NotEqualOperator(ValueObject left, ValueObject right)
+        protected static bool NotEqualOperator(ValueObject left, ValueObject right)
         {
             return !EqualOperator(left, right);
         }
@@ -23,8 +23,19 @@ namespace Order.Domain.SharedKernel
             {
                 return false;
             }
+
+            //TODO: Fix.
+            return false;
         }
 
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
 
+        public override string ToString()
+        {
+            return base.ToString();
+        }
     }
 }
