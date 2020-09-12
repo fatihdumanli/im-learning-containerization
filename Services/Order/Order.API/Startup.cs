@@ -62,8 +62,8 @@ namespace Order.API
 
             services.AddLogging(config =>
             {
-                config.AddDebug(); // Log to debug (debug window in Visual Studio or any debugger attached)
-                config.AddConsole(); // Log to console (colored !)
+                config.AddDebug(); 
+                config.AddConsole(); 
             })
            .Configure<LoggerFilterOptions>(options => {
 

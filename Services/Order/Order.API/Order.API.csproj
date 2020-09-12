@@ -3,6 +3,8 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\BuildingBlocks\EventBus\EventBus.csproj" />
     <ProjectReference Include="..\..\..\BuildingBlocks\RabbitMQEventBus\RabbitMQEventBus.csproj" />
+    <ProjectReference Include="..\Order.Domain\Order.Domain.csproj" />
+    <ProjectReference Include="..\Order.Infrastructure\Order.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>
