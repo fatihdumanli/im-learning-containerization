@@ -24,18 +24,10 @@ namespace Ordering.Infrastructure.Migrations
                 schema: "ordering",
                 incrementBy: 10);
 
-            migrationBuilder.CreateTable(
-                name: "CardTypes",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CardTypes", x => x.Id);
-                });
+            migrationBuilder.CreateSequence(
+                name: "paymentseq",
+                schema: "ordering",
+                incrementBy: 10);
 
             migrationBuilder.CreateTable(
                 name: "buyers",
@@ -52,6 +44,19 @@ namespace Ordering.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "cardTypes",
+                schema: "ordering",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false, defaultValue: 1),
+                    Name = table.Column<string>(maxLength: 200, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_cardTypes", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "orderStatus",
                 schema: "ordering",
                 columns: table => new
@@ -65,30 +70,35 @@ namespace Ordering.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Payments",
+                name: "paymentMethods",
+                schema: "ordering",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CardTypeId = table.Column<int>(nullable: true),
-                    BuyerId = table.Column<int>(nullable: true)
+                    Id = table.Column<int>(nullable: false),
+                    CardTypeId = table.Column<int>(nullable: false),
+                    BuyerId = table.Column<int>(nullable: false),
+                    Alias = table.Column<string>(maxLength: 200, nullable: false),
+                    CardHolderName = table.Column<string>(maxLength: 200, nullable: false),
+                    CardNumber = table.Column<string>(maxLength: 25, nullable: false),
+                    Expiration = table.Column<DateTime>(maxLength: 25, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Payments", x => x.Id);
+                    table.PrimaryKey("PK_paymentMethods", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Payments_buyers_BuyerId",
+                        name: "FK_paymentMethods_buyers_BuyerId",
                         column: x => x.BuyerId,
                         principalSchema: "ordering",
                         principalTable: "buyers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Payments_CardTypes_CardTypeId",
+                        name: "FK_paymentMethods_cardTypes_CardTypeId",
                         column: x => x.CardTypeId,
-                        principalTable: "CardTypes",
+                        principalSchema: "ordering",
+                        principalTable: "cardTypes",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -125,9 +135,10 @@ namespace Ordering.Infrastructure.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_orders_Payments_PaymentMethodId",
+                        name: "FK_orders_paymentMethods_PaymentMethodId",
                         column: x => x.PaymentMethodId,
-                        principalTable: "Payments",
+                        principalSchema: "ordering",
+                        principalTable: "paymentMethods",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -159,16 +170,6 @@ namespace Ordering.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Payments_BuyerId",
-                table: "Payments",
-                column: "BuyerId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Payments_CardTypeId",
-                table: "Payments",
-                column: "CardTypeId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_buyers_IdentityGuid",
                 schema: "ordering",
                 table: "buyers",
@@ -198,6 +199,18 @@ namespace Ordering.Infrastructure.Migrations
                 schema: "ordering",
                 table: "orders",
                 column: "PaymentMethodId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_paymentMethods_BuyerId",
+                schema: "ordering",
+                table: "paymentMethods",
+                column: "BuyerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_paymentMethods_CardTypeId",
+                schema: "ordering",
+                table: "paymentMethods",
+                column: "CardTypeId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -215,14 +228,16 @@ namespace Ordering.Infrastructure.Migrations
                 schema: "ordering");
 
             migrationBuilder.DropTable(
-                name: "Payments");
+                name: "paymentMethods",
+                schema: "ordering");
 
             migrationBuilder.DropTable(
                 name: "buyers",
                 schema: "ordering");
 
             migrationBuilder.DropTable(
-                name: "CardTypes");
+                name: "cardTypes",
+                schema: "ordering");
 
             migrationBuilder.DropSequence(
                 name: "orderitemseq");
@@ -233,6 +248,10 @@ namespace Ordering.Infrastructure.Migrations
 
             migrationBuilder.DropSequence(
                 name: "orderseq",
+                schema: "ordering");
+
+            migrationBuilder.DropSequence(
+                name: "paymentseq",
                 schema: "ordering");
         }
     }

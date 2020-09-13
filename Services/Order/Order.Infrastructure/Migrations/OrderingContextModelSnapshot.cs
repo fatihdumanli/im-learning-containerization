@@ -20,6 +20,7 @@ namespace Ordering.Infrastructure.Migrations
                 .HasAnnotation("Relational:Sequence:.orderitemseq", "'orderitemseq', '', '1', '10', '', '', 'Int64', 'False'")
                 .HasAnnotation("Relational:Sequence:ordering.buyerseq", "'buyerseq', 'ordering', '1', '10', '', '', 'Int64', 'False'")
                 .HasAnnotation("Relational:Sequence:ordering.orderseq", "'orderseq', 'ordering', '1', '10', '', '', 'Int64', 'False'")
+                .HasAnnotation("Relational:Sequence:ordering.paymentseq", "'paymentseq', 'ordering', '1', '10', '', '', 'Int64', 'False'")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("Ordering.Domain.AggregatesModel.BuyerAggregate.Buyer", b =>
@@ -50,16 +51,17 @@ namespace Ordering.Infrastructure.Migrations
             modelBuilder.Entity("Ordering.Domain.AggregatesModel.BuyerAggregate.CardType", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasDefaultValue(1);
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(200)")
+                        .HasMaxLength(200);
 
                     b.HasKey("Id");
 
-                    b.ToTable("CardTypes");
+                    b.ToTable("cardTypes","ordering");
                 });
 
             modelBuilder.Entity("Ordering.Domain.AggregatesModel.BuyerAggregate.PaymentMethod", b =>
@@ -67,21 +69,47 @@ namespace Ordering.Infrastructure.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasAnnotation("SqlServer:HiLoSequenceName", "paymentseq")
+                        .HasAnnotation("SqlServer:HiLoSequenceSchema", "ordering")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.SequenceHiLo);
 
-                    b.Property<int?>("BuyerId")
+                    b.Property<int>("BuyerId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("CardTypeId")
+                    b.Property<string>("_alias")
+                        .IsRequired()
+                        .HasColumnName("Alias")
+                        .HasColumnType("nvarchar(200)")
+                        .HasMaxLength(200);
+
+                    b.Property<string>("_cardHolderName")
+                        .IsRequired()
+                        .HasColumnName("CardHolderName")
+                        .HasColumnType("nvarchar(200)")
+                        .HasMaxLength(200);
+
+                    b.Property<string>("_cardNumber")
+                        .IsRequired()
+                        .HasColumnName("CardNumber")
+                        .HasColumnType("nvarchar(25)")
+                        .HasMaxLength(25);
+
+                    b.Property<int>("_cardTypeId")
+                        .HasColumnName("CardTypeId")
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("_expiration")
+                        .HasColumnName("Expiration")
+                        .HasColumnType("datetime2")
+                        .HasMaxLength(25);
 
                     b.HasKey("Id");
 
                     b.HasIndex("BuyerId");
 
-                    b.HasIndex("CardTypeId");
+                    b.HasIndex("_cardTypeId");
 
-                    b.ToTable("Payments");
+                    b.ToTable("paymentMethods","ordering");
                 });
 
             modelBuilder.Entity("Ordering.Domain.AggregatesModel.OrderAggregate.Order", b =>
@@ -184,11 +212,14 @@ namespace Ordering.Infrastructure.Migrations
                     b.HasOne("Ordering.Domain.AggregatesModel.BuyerAggregate.Buyer", null)
                         .WithMany("PaymentMethods")
                         .HasForeignKey("BuyerId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Ordering.Domain.AggregatesModel.BuyerAggregate.CardType", "CardType")
                         .WithMany()
-                        .HasForeignKey("CardTypeId");
+                        .HasForeignKey("_cardTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Ordering.Domain.AggregatesModel.OrderAggregate.Order", b =>

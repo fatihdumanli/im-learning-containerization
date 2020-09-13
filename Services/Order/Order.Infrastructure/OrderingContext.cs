@@ -45,6 +45,9 @@ namespace Ordering.Infrastructure
             modelBuilder.ApplyConfiguration(new OrderItemEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new OrderStatusEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new BuyerEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new PaymentMethodEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new CardTypeEntityTypeConfiguration());
+            
         }
 
         //Entity'ler kaydedilirken tüm domain eventlar mediator aracılığıyla publish ediliyor.
