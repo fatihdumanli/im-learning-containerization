@@ -42,6 +42,9 @@ namespace Ordering.Infrastructure
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new OrderEntityTypeConfiguration());   
+            modelBuilder.ApplyConfiguration(new OrderItemEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new OrderStatusEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new BuyerEntityTypeConfiguration());
         }
 
         //Entity'ler kaydedilirken tüm domain eventlar mediator aracılığıyla publish ediliyor.
