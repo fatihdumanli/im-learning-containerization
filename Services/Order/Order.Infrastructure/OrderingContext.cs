@@ -25,12 +25,16 @@ namespace Ordering.Infrastructure
 
         private readonly IMediator _mediator;
         private IDbContextTransaction _currentTransaction;
-        public OrderingContext(DbContextOptions<OrderingContext> options) : base(options) { }
+        public OrderingContext(DbContextOptions<OrderingContext> options) : base(options) 
+        {             
+            System.Diagnostics.Debug.WriteLine("options: " + options);
+        }
+
         public IDbContextTransaction GetCurrentTransaction() => _currentTransaction;
         public bool HasActiveTransaction => _currentTransaction != null;
 
         public OrderingContext(DbContextOptions<OrderingContext> options, IMediator mediator) : base(options)
-        {
+        {            
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             System.Diagnostics.Debug.WriteLine("OrderingContext::ctor ->" + this.GetHashCode());
         }
@@ -125,7 +129,7 @@ namespace Ordering.Infrastructure
         public OrderingContext CreateDbContext(string[] args)
         {
             var optionsBuilder = new DbContextOptionsBuilder<OrderingContext>()
-                .UseSqlServer("");
+                .UseSqlServer("Server=localhost,5433;Initial Catalog=OrderingService;User Id=sa;Password=Pass@word;TrustServerCertificate=True;Connection Timeout=5;");
 
             return new OrderingContext(optionsBuilder.Options, new NoMediator());
         }

@@ -10,8 +10,11 @@ namespace Order.API.Application.Command
     public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, bool>
     {
         private ILogger<CreateOrderCommandHandler> _logger;
-        public CreateOrderCommandHandler(ILogger<CreateOrderCommandHandler> logger)
+        private readonly IOrderRepository _orderRepository;
+
+        public CreateOrderCommandHandler(IOrderRepository repository, ILogger<CreateOrderCommandHandler> logger)
         {
+            this._orderRepository = repository;
             this._logger = logger;
         }
         /*

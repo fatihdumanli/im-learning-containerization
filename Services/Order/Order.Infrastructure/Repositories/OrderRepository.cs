@@ -1,4 +1,6 @@
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Ordering.Domain.AggregatesModel.OrderAggregate;
 using Ordering.Domain.SharedKernel;
 
@@ -6,6 +8,19 @@ namespace Ordering.Infrastructure.Repositories
 {
     public class OrderRepository : IOrderRepository
     {
+        private ILogger<OrderRepository> _logger;
+        private readonly OrderingContext _context;
+
+        public OrderRepository(OrderingContext context, ILogger<OrderRepository> logger)
+        {
+            this._context = context;
+            this._logger = logger;
+
+
+            _logger.LogInformation("---- [x] Creating OrderRepository instance.");
+            _logger.LogInformation(string.Format("Order count: {0}",_context.Orders.Count()));
+        }
+
         public IUnitOfWork UnitOfWork 
         {
             get 
