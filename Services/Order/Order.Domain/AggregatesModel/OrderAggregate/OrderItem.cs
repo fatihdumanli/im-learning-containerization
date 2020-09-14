@@ -33,7 +33,7 @@ namespace Ordering.Domain.AggregatesModel.OrderAggregate
             _unitPrice = unitPrice;
             _discount = discount;
             _units = units;
-            _pictureUrl = pictureUrl;
+            _pictureUrl = "";
         }
 
          public string GetPictureUri() => _pictureUrl;

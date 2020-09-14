@@ -62,6 +62,23 @@ namespace Ordering.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("cardTypes","ordering");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Amex"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Visa"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "MasterCard"
+                        });
                 });
 
             modelBuilder.Entity("Ordering.Domain.AggregatesModel.BuyerAggregate.PaymentMethod", b =>
@@ -205,6 +222,38 @@ namespace Ordering.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("orderStatus","ordering");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Submitted"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "AwaitingValidation"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "StockConfirmed"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Paid"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "Shipped"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "Cancelled"
+                        });
                 });
 
             modelBuilder.Entity("Ordering.Domain.AggregatesModel.BuyerAggregate.PaymentMethod", b =>

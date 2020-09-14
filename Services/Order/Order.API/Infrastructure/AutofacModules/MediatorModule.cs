@@ -1,6 +1,7 @@
 using Autofac;
 using MediatR;
 using Order.API.Application.Command;
+using Ordering.Application.Behaviors;
 
 namespace Order.API.Infrastructure.AutofacModules
 {
@@ -10,6 +11,8 @@ namespace Order.API.Infrastructure.AutofacModules
         {
             builder.RegisterType<CreateOrderCommand>();
             builder.RegisterType<CreateOrderCommandHandler>().AsImplementedInterfaces().InstancePerDependency();
+            builder.RegisterGeneric(typeof(TransactionBehavior<,>)).As(typeof(IPipelineBehavior<,>));
+
             //Necessary for constructor of Mediator class.
             builder.Register<ServiceFactory>(context =>
             {

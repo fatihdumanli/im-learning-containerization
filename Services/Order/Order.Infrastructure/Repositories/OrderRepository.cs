@@ -25,13 +25,14 @@ namespace Ordering.Infrastructure.Repositories
         {
             get 
             {
-                return null;
+                return _context;
             }
         }
 
         public Order Add(Order order)
         {
-            throw new System.NotImplementedException();
+            _logger.LogInformation(" [x] OrderRepository: Order item is being added to Order DbSet.");
+            return _context.Orders.Add(order).Entity;
         }
 
         public Task<Order> GetAsync(int orderId)

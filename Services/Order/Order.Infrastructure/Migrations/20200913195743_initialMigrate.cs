@@ -169,6 +169,31 @@ namespace Ordering.Infrastructure.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.InsertData(
+                schema: "ordering",
+                table: "cardTypes",
+                columns: new[] { "Id", "Name" },
+                values: new object[,]
+                {
+                    { 1, "Amex" },
+                    { 2, "Visa" },
+                    { 3, "MasterCard" }
+                });
+
+            migrationBuilder.InsertData(
+                schema: "ordering",
+                table: "orderStatus",
+                columns: new[] { "Id", "Name" },
+                values: new object[,]
+                {
+                    { 1, "Submitted" },
+                    { 2, "AwaitingValidation" },
+                    { 3, "StockConfirmed" },
+                    { 4, "Paid" },
+                    { 5, "Shipped" },
+                    { 6, "Cancelled" }
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_buyers_IdentityGuid",
                 schema: "ordering",

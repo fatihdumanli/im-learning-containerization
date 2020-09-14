@@ -25,6 +25,7 @@ namespace Ordering.Domain.AggregatesModel.OrderAggregate
         {
                 _buyerId = buyerId;
                 _paymentMethodId = paymentMethodId;
+                //Order ilk kaydedilirken submitted statusunde kaydediliyor. (OrderStatusId: 1)
                 _orderStatusId = OrderStatus.Submitted.Id;
                 _orderDate = DateTime.UtcNow;
                 Address = address;               

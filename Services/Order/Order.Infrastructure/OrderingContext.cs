@@ -47,7 +47,17 @@ namespace Ordering.Infrastructure
             modelBuilder.ApplyConfiguration(new BuyerEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new PaymentMethodEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new CardTypeEntityTypeConfiguration());
-            
+
+            modelBuilder.Entity<OrderStatus>().HasData(new OrderStatus(1, "Submitted"));
+            modelBuilder.Entity<OrderStatus>().HasData(new OrderStatus(2, "AwaitingValidation"));
+            modelBuilder.Entity<OrderStatus>().HasData(new OrderStatus(3, "StockConfirmed"));
+            modelBuilder.Entity<OrderStatus>().HasData(new OrderStatus(4, "Paid"));
+            modelBuilder.Entity<OrderStatus>().HasData(new OrderStatus(5, "Shipped"));
+            modelBuilder.Entity<OrderStatus>().HasData(new OrderStatus(6, "Cancelled"));
+
+            modelBuilder.Entity<CardType>().HasData(new CardType(1, "Amex"));
+            modelBuilder.Entity<CardType>().HasData(new CardType(2, "Visa"));
+            modelBuilder.Entity<CardType>().HasData(new CardType(3, "MasterCard"));            
         }
 
         //Entity'ler kaydedilirken tüm domain eventlar mediator aracılığıyla publish ediliyor.

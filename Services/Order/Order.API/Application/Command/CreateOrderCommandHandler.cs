@@ -21,7 +21,7 @@ namespace Order.API.Application.Command
             1. Instantiate new Address valueObject
             2. Instantiate new Order aggregate root.
         */
-        public Task<bool> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
         {
 
             //In request,
@@ -43,8 +43,13 @@ namespace Order.API.Application.Command
             _logger.LogInformation("------- [.] Create Order Command Handler...");
             _logger.LogInformation("REQUEST --> " + JsonConvert.SerializeObject(request));
         
-            
-            return Task.FromResult(true);
+            _logger.LogInformation("----- Creating Order - Order: {@Order}", order);
+
+            _orderRepository.Add(order);
+                 
+            _logger.LogInformation(" [x] CreateOrderCommandHandler: Order item is added to Order DbSet.");
+
+            return await _orderRepository.UnitOfWork.SaveEntitiesAsync();
         }
     }
 }
