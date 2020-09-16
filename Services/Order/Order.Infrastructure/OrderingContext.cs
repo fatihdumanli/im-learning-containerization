@@ -1,7 +1,6 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -22,8 +21,6 @@ namespace Ordering.Infrastructure
         public DbSet<Buyer> Buyers { get; set; }
         public DbSet<CardType> CardTypes { get; set; }
         public DbSet<OrderStatus> OrderStatus { get; set; }
-
-        private readonly IMediator _mediator;
         private IDbContextTransaction _currentTransaction;
         public OrderingContext(DbContextOptions<OrderingContext> options) : base(options) 
         {             
@@ -32,12 +29,6 @@ namespace Ordering.Infrastructure
 
         public IDbContextTransaction GetCurrentTransaction() => _currentTransaction;
         public bool HasActiveTransaction => _currentTransaction != null;
-
-        public OrderingContext(DbContextOptions<OrderingContext> options, IMediator mediator) : base(options)
-        {            
-            _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
-            System.Diagnostics.Debug.WriteLine("OrderingContext::ctor ->" + this.GetHashCode());
-        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -147,32 +138,8 @@ namespace Ordering.Infrastructure
             var optionsBuilder = new DbContextOptionsBuilder<OrderingContext>()
                 .UseSqlServer("Server=localhost,5433;Initial Catalog=OrderingService;User Id=sa;Password=Pass@word;TrustServerCertificate=True;Connection Timeout=5;");
 
-            return new OrderingContext(optionsBuilder.Options, new NoMediator());
+            return new OrderingContext(optionsBuilder.Options);
         }
-
-        class NoMediator : IMediator
-        {
-            public Task Publish(object notification, CancellationToken cancellationToken = default)
-            {
-                throw new NotImplementedException();
-            }
-
-            public Task Publish<TNotification>(TNotification notification, CancellationToken cancellationToken = default) where TNotification : INotification
-            {
-                throw new NotImplementedException();
-            }
-
-            public Task<TResponse> Send<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default)
-            {
-                throw new NotImplementedException();
-            }
-
-            public Task<object> Send(object request, CancellationToken cancellationToken = default)
-            {
-                throw new NotImplementedException();
-            }
-        }
-
 
     }
 }

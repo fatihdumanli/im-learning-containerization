@@ -20,7 +20,6 @@ using Microsoft.Extensions.Logging;
 using Order.API.Application.Command;
 using Order.API.Application.IntegrationEvents.EventHandling;
 using Order.API.Application.IntegrationEvents.Events;
-using Order.API.Infrastructure.AutofacModules;
 using Ordering.Domain.AggregatesModel.OrderAggregate;
 using Ordering.Infrastructure;
 using Ordering.Infrastructure.Repositories;
@@ -40,7 +39,6 @@ namespace Order.API
         public void ConfigureContainer(ContainerBuilder builder)
         {
             builder.RegisterType<UserCheckoutAcceptedIntegrationEventHandler>();
-            builder.RegisterModule(new MediatorModule());    
         }
 
         public IConfiguration Configuration { get; }
