@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Order.API.Application.Models
+namespace Ordering.API.Application.Models
 {
     public class CustomerBasket
     {

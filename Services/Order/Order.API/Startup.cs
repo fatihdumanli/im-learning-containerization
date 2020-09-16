@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using CommandDistpaching;
 using EventBus;
 using EventBus.Abstractions;
 using Microsoft.AspNetCore.Builder;
@@ -16,14 +17,15 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Order.API.Application.IntegrationEvents.EventHandling;
-using Order.API.Application.IntegrationEvents.Events;
+using Ordering.API.Application.Command;
+using Ordering.API.Application.IntegrationEvents.EventHandling;
+using Ordering.API.Application.IntegrationEvents.Events;
 using Ordering.Domain.AggregatesModel.OrderAggregate;
 using Ordering.Infrastructure;
 using Ordering.Infrastructure.Repositories;
 using RabbitMQEventBus;
 
-namespace Order.API
+namespace Ordering.API
 {
     public class Startup
     {
@@ -37,6 +39,7 @@ namespace Order.API
         public void ConfigureContainer(ContainerBuilder builder)
         {
             builder.RegisterType<UserCheckoutAcceptedIntegrationEventHandler>();
+            builder.RegisterType<CreateOrderCommandHandler>().As<ICommandHandler<CreateOrderCommand>>();
         }
 
         public IConfiguration Configuration { get; }
@@ -76,6 +79,8 @@ namespace Order.API
                 var logger = serviceProvider.GetRequiredService<ILogger<EventBusRabbitMQ>>();
                 return new EventBusRabbitMQ("Order", subsManager: subsManager, autoFac: autoFac, rabbitMqServer: rabbitMqEndpoint, logger: logger);
             });
+
+            services.AddSingleton<CommandDistpaching.CommandDispatcher>();
 
             services.AddLogging(config =>
             {
