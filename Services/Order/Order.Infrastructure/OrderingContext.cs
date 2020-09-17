@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.Extensions.Logging;
 using Ordering.Domain.AggregatesModel.BuyerAggregate;
 using Ordering.Domain.AggregatesModel.OrderAggregate;
 using Ordering.Domain.SharedKernel;
@@ -13,7 +14,7 @@ namespace Ordering.Infrastructure
 {
     public class OrderingContext : DbContext, IUnitOfWork
     {
-
+        private ILogger<OrderingContext> _logger;
         public const string DEFAULT_SCHEMA = "ordering";
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
@@ -66,7 +67,6 @@ namespace Ordering.Infrastructure
             // After executing this line all the changes (from the Command Handler and Domain Event Handlers) 
             // performed through the DbContext will be committed
             var result = await base.SaveChangesAsync();
-
             return true;
         }
 

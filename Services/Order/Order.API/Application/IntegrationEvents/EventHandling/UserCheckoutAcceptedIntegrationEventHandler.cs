@@ -1,4 +1,4 @@
-using CommandDistpaching;
+using DomainDispatching;
 using EventBus.Abstractions;
 using Microsoft.Extensions.Logging;
 using Ordering.API.Application.Command;
@@ -11,9 +11,9 @@ namespace Ordering.API.Application.IntegrationEvents.EventHandling
     public class UserCheckoutAcceptedIntegrationEventHandler : IIntegrationEventHandler<UserCheckoutAcceptedIntegrationEvent>
     {
         private ILogger<UserCheckoutAcceptedIntegrationEventHandler> _logger;
-        private CommandDispatcher _commandDispatcher;
+        private DomainDispatcher _commandDispatcher;
         public UserCheckoutAcceptedIntegrationEventHandler(ILogger<UserCheckoutAcceptedIntegrationEventHandler> logger,
-            CommandDispatcher cd)
+            DomainDispatcher cd)
         {
             this._logger = logger;
             this._commandDispatcher = cd;
@@ -21,24 +21,16 @@ namespace Ordering.API.Application.IntegrationEvents.EventHandling
 
         public Task Handle(UserCheckoutAcceptedIntegrationEvent @event)
         {
-            _logger.LogInformation("\t [.] Inside the UserCheckoutAcceptedIntegrationEventHandler");
-            
-        
-
-            var command = new CreateOrderCommand(@event.Buyer, @event.Street, @event.City, @event.State,
+            _logger.LogInformation(string.Format("[x] UserCheckoutAcceptedIntegrationEventHandler.Handle(): Received integration event: {0}",
+                Newtonsoft.Json.JsonConvert.SerializeObject(@event)));
+              
+            //TODO: add payment fields to the CreateOrderCommand
+            var command = new CreateOrderCommand(@event.UserId, @event.Street, @event.City, @event.State,
                 @event.ZipCode, @event.Country, @event.Basket.Items);
                 
-            _commandDispatcher.Dispatch<CreateOrderCommand>(command);
+            _commandDispatcher.DispatchCommand<CreateOrderCommand>(command);
                 
-            
-            /*
-            var command = new CreateOrderCommand(@event.Basket.Items, userId: @event.UserId, userName: @event.UserName, city: @event.City,
-                street: @event.Street, state: @event.State, country: @event.Country, zipCode: @event.ZipCode,
-                cardNumber: @event.CardNumber, cardHolderName: @event.CardHolderName, cardExpiration: @event.CardExpiration,
-                cardSecurityNumber: @event.CardSecurityNumber, cardTypeId: @event.CardTypeId);
-                
-            */
-            //TODO publish command
+           
             return null;
         }
     }

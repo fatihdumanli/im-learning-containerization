@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Ordering.Domain.DomainEvents;
 using Ordering.Domain.SharedKernel;
 
 namespace Ordering.Domain.AggregatesModel.OrderAggregate
@@ -19,7 +20,7 @@ namespace Ordering.Domain.AggregatesModel.OrderAggregate
 
         private readonly List<OrderItem> _orderItems;
         public IReadOnlyCollection<OrderItem> OrderItems => _orderItems;
-
+        
         public Order(string userId, string userName, Address address, int cardTypeId, string cardNumber, string cardSecurityNumber,
                 string cardHolderName, DateTime cardExpiration, int? buyerId = null, int? paymentMethodId = null) : this()
         {
@@ -28,7 +29,10 @@ namespace Ordering.Domain.AggregatesModel.OrderAggregate
                 //Order ilk kaydedilirken submitted statusunde kaydediliyor. (OrderStatusId: 1)
                 _orderStatusId = OrderStatus.Submitted.Id;
                 _orderDate = DateTime.UtcNow;
-                Address = address;               
+                Address = address;              
+
+                
+                this.AddDomainEvent(new OrderStartedDomainEvent(userId));
                 
         }
         protected Order()

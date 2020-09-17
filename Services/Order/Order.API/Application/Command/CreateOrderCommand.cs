@@ -40,12 +40,13 @@ namespace Ordering.API.Application.Command
     }
 
 
-    public class CreateOrderCommand : CommandDistpaching.Command
+    public class CreateOrderCommand : DomainDispatching.Commanding.Command
     {
 
         public CreateOrderCommand(string buyerId, string street, string city, string state, string zipCode, 
             string country, List<BasketItem> basketItems)
         {
+            this.BuyerId = buyerId;
             this.City = city;
             this.Country = country;
             this.State = state;

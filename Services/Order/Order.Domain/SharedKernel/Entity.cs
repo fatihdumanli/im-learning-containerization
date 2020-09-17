@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using DomainDispatching.DomainEvent;
 
 namespace Ordering.Domain.SharedKernel
 {
@@ -16,14 +18,25 @@ namespace Ordering.Domain.SharedKernel
             {
                 _id = value;
             }
-        }
+        }      
+        protected List<IDomainEvent> _domainEvents;
+        
+        public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
+        
+        protected void AddDomainEvent(IDomainEvent domainEvent) 
+        {
+            if(_domainEvents == null)
+            {
+                _domainEvents = new List<IDomainEvent>();
+            }
 
+            _domainEvents.Add(domainEvent);
+        }
+        
         public bool IsTransient() 
         {
             return this.Id == default(Int32);
         }
-
-
         public override bool Equals(object obj)
         {
             if(obj == null || !(obj is Entity))
@@ -42,8 +55,7 @@ namespace Ordering.Domain.SharedKernel
 
             else 
                 return item.Id == this.Id;      
-        }
-        
+        }       
         // override object.GetHashCode
         public override int GetHashCode()
         {
