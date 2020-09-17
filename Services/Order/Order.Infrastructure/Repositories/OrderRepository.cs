@@ -17,7 +17,7 @@ namespace Ordering.Infrastructure.Repositories
             this._logger = logger;
 
 
-            _logger.LogInformation("---- [x] Creating OrderRepository instance.");
+            _logger.LogInformation("[x] OrderRepository: Creating an OrderRepository instance.");
             _logger.LogInformation(string.Format("Order count: {0}",_context.Orders.Count()));
         }
 
@@ -31,7 +31,7 @@ namespace Ordering.Infrastructure.Repositories
 
         public Order Add(Order order)
         {
-            _logger.LogInformation(" [x] OrderRepository: Order item is being added to Order DbSet.");
+            _logger.LogInformation(" [x] OrderRepository.Add(): Order item is being added to Order DbSet.");
             return _context.Orders.Add(order).Entity;
         }
 

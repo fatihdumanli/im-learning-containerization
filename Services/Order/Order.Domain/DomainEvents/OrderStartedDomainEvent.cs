@@ -1,4 +1,5 @@
 using DomainDispatching.DomainEvent;
+using System;
 
 namespace Ordering.Domain.DomainEvents
 {
@@ -11,5 +12,9 @@ namespace Ordering.Domain.DomainEvents
             this.Buyer = buyer;
         }
 
+        public Type GetHandlerType()
+        {
+            return this.GetType();
+        }
     }
 }

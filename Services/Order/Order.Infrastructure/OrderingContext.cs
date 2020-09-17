@@ -1,6 +1,8 @@
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using DomainDispatching;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -14,7 +16,8 @@ namespace Ordering.Infrastructure
 {
     public class OrderingContext : DbContext, IUnitOfWork
     {
-        private ILogger<OrderingContext> _logger;
+        private readonly ILogger<OrderingContext> _logger;
+        private DomainDispatcher _domainDispatcher;
         public const string DEFAULT_SCHEMA = "ordering";
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
@@ -23,8 +26,14 @@ namespace Ordering.Infrastructure
         public DbSet<CardType> CardTypes { get; set; }
         public DbSet<OrderStatus> OrderStatus { get; set; }
         private IDbContextTransaction _currentTransaction;
-        public OrderingContext(DbContextOptions<OrderingContext> options) : base(options) 
+        public OrderingContext(DbContextOptions<OrderingContext> options,
+            ILogger<OrderingContext> logger,
+            DomainDispatcher dispatcher) : base(options) 
         {             
+
+            _logger = logger ?? throw new ArgumentNullException("Logger is null!");
+            _logger.LogInformation(" [x] OrderContext: Creating an instance of OrderContext class.");
+            _domainDispatcher = dispatcher ?? throw new ArgumentNullException("OrderingContext needs an DomainDispatcher object to publish domain events!");
             System.Diagnostics.Debug.WriteLine("options: " + options);
         }
 
@@ -53,12 +62,44 @@ namespace Ordering.Infrastructure
         }
 
         //Entity'ler kaydedilirken tüm domain eventlar mediator aracılığıyla publish ediliyor.
-        public async Task<bool> SaveEntitiesAsync()
+        public Task<bool> SaveEntitiesAsync()
         {
             // Dispatch Domain Events collection. 
             // Choices:
+
+
             // A) Right BEFORE committing data (EF SaveChanges) into the DB will make a single transaction including  
             // side effects from the domain event handlers which are using the same DbContext with "InstancePerLifetimeScope" or "scoped" lifetime
+
+            //Domain eventları publish et, domain eventların sebep olduğu değişiklerle birlikte bu transaction ı persist et. (aşağıda)
+            //TODO: Bir hata simule edelim domain event handlerların birinde...
+            var entries = this.ChangeTracker.Entries();
+
+            
+            var domainEntities = this.ChangeTracker
+                .Entries<Entity>()
+                .Where(x => x.Entity.DomainEvents != null && x.Entity.DomainEvents.Any());
+            
+            _logger.LogInformation(" [x] OrderingContext.SaveEntitiesAsync(): {0} entity found in the OrderingContext.ChangeTracker.", domainEntities.Count());
+
+            
+            var domainEvents = domainEntities
+                .SelectMany(x => x.Entity.DomainEvents)
+                .ToList();
+
+            _logger.LogInformation(" [x] OrderingContext.SaveEntitiesAsync(): {0} domain events found to publish.", domainEvents.Count);
+
+
+            foreach(var domainEvent in domainEvents)
+            {
+                _logger.LogInformation("[x] OrderingContext.SaveEntitiesAsync(): Publishing domain event: {0}", domainEvent.GetType().Name);
+                _domainDispatcher.PublishDomainEvent(domainEvent);
+            }
+            
+            domainEntities.ToList()
+                .ForEach(entity => entity.Entity.ClearDomainEvents());
+        
+
             // B) Right AFTER committing data (EF SaveChanges) into the DB will make multiple transactions. 
             // You will need to handle eventual consistency and compensatory actions in case of failures in any of the Handlers. 
             
@@ -66,8 +107,10 @@ namespace Ordering.Infrastructure
 
             // After executing this line all the changes (from the Command Handler and Domain Event Handlers) 
             // performed through the DbContext will be committed
-            var result = await base.SaveChangesAsync();
-            return true;
+            _logger.LogInformation(" [x] OrderingContext.SaveEntitiesAsync(): Entities are being saved to persistance.");
+            var result = base.SaveChanges();
+            _logger.LogInformation(string.Format(" [x] OrderingContext.SaveEntitiesAsync(): Entities are persisted successfully. Persisted entity count: {0}", result));
+            return null;
         }
 
         public async Task<IDbContextTransaction> BeginTransactionAsync()
@@ -138,7 +181,7 @@ namespace Ordering.Infrastructure
             var optionsBuilder = new DbContextOptionsBuilder<OrderingContext>()
                 .UseSqlServer("Server=localhost,5433;Initial Catalog=OrderingService;User Id=sa;Password=Pass@word;TrustServerCertificate=True;Connection Timeout=5;");
 
-            return new OrderingContext(optionsBuilder.Options);
+            return new OrderingContext(optionsBuilder.Options, null, null);
         }
 
     }

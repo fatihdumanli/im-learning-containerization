@@ -44,7 +44,8 @@ namespace Ordering.API
         {
             builder.RegisterType<UserCheckoutAcceptedIntegrationEventHandler>();
             builder.RegisterType<CreateOrderCommandHandler>().As<ICommandHandler<CreateOrderCommand>>();
-            builder.RegisterType<OrderStartedDomainEventHandler>().As<IDomainEventHandler<OrderStartedDomainEvent>>();
+            builder.RegisterType(typeof(OrderStartedDomainEventHandler))
+                            .As<IDomainEventHandler<OrderStartedDomainEvent>>();
         }
 
         public IConfiguration Configuration { get; }

@@ -33,6 +33,11 @@ namespace Ordering.Domain.SharedKernel
             _domainEvents.Add(domainEvent);
         }
         
+        public void ClearDomainEvents()
+        {
+            _domainEvents.Clear();
+        }
+        
         public bool IsTransient() 
         {
             return this.Id == default(Int32);
