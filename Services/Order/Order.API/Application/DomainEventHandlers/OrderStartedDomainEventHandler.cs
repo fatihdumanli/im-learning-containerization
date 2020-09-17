@@ -15,6 +15,8 @@ namespace Ordering.API.Application.DomainEventHandlers
         public void Handle(OrderStartedDomainEvent domainEvent)
         {
             _logger.LogInformation(" [x] OrderStartedDomainEventHandler.Handle(): Handling OrderStartedDomainEvent domain event...");
+
+            
         }
     }
 }

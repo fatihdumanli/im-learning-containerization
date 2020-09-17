@@ -12,9 +12,5 @@ namespace Ordering.Domain.DomainEvents
             this.Buyer = buyer;
         }
 
-        public Type GetHandlerType()
-        {
-            return this.GetType();
-        }
     }
 }

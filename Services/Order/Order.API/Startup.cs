@@ -23,6 +23,7 @@ using Ordering.API.Application.Command;
 using Ordering.API.Application.DomainEventHandlers;
 using Ordering.API.Application.IntegrationEvents.EventHandling;
 using Ordering.API.Application.IntegrationEvents.Events;
+using Ordering.Domain.AggregatesModel.BuyerAggregate;
 using Ordering.Domain.AggregatesModel.OrderAggregate;
 using Ordering.Domain.DomainEvents;
 using Ordering.Infrastructure;
@@ -63,7 +64,7 @@ namespace Ordering.API
             });
 
             services.AddControllers();
-
+            services.AddTransient<IBuyerRepository, BuyerRepository>();
             services.AddTransient<IOrderRepository, OrderRepository>(serviceProvider => 
             {
                 var logger = serviceProvider.GetRequiredService<ILogger<OrderRepository>>();
