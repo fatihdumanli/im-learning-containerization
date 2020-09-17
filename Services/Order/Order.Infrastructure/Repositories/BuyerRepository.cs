@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Ordering.Domain.AggregatesModel.BuyerAggregate;
 using Ordering.Domain.SharedKernel;
 
@@ -11,11 +12,13 @@ namespace Ordering.Infrastructure.Repositories
     {
 
         private readonly OrderingContext _context;
+        private ILogger<BuyerRepository> _logger;
 
-
-        public BuyerRepository(OrderingContext context)
+        public BuyerRepository(OrderingContext context, ILogger<BuyerRepository> logger)
         {
+            _logger = logger;
             _context = context ?? throw new ArgumentNullException("BuyerRepository needs an OrderingContext object.");
+            _logger.LogInformation(" [x] BuyerRepository: Creating an instance of BuyerRepository.");
         }
 
         public IUnitOfWork UnitOfWork 
