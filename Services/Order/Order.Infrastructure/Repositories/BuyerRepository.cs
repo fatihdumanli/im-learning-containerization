@@ -46,19 +46,19 @@ namespace Ordering.Infrastructure.Repositories
         {
             var buyer = await _context.Buyers
                 //.Include(i => i.PaymentMethods)
-                .Where(b => b.IdentityGuid == buyerIdentityGuid)
+                .Where(b => b.Name == buyerIdentityGuid)
                 .SingleOrDefaultAsync();
             
             return buyer;
         }
 
-        public async Task<Buyer> FindByIdAsync(string id)
+        public Buyer FindByNameAsync(string name)
         {
-            var buyer = await _context.Buyers
-                .Where(b => b.Id == int.Parse(id))
-                .SingleOrDefaultAsync();
+            var buyer = _context.Buyers
+                .Where(b => b.Name == name)
+                .SingleOrDefault();
 
-            return buyer;
+            return buyer;        
         }
 
         public Buyer Update(Buyer buyer)

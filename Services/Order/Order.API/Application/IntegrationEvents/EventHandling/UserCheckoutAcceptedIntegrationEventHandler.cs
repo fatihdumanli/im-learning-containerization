@@ -26,7 +26,8 @@ namespace Ordering.API.Application.IntegrationEvents.EventHandling
               
             //TODO: add payment fields to the CreateOrderCommand
             var command = new CreateOrderCommand(@event.UserId, @event.Street, @event.City, @event.State,
-                @event.ZipCode, @event.Country, @event.Basket.Items);
+                @event.ZipCode, @event.Country, cardNumber: @event.CardNumber, cardHolderName: @event.CardHolderName,
+                cvv: @event.CardSecurityNumber, expiration: @event.CardExpiration, cardTypeId: @event.CardTypeId, @event.Basket.Items);
                 
             _commandDispatcher.DispatchCommand<CreateOrderCommand>(command);
                 

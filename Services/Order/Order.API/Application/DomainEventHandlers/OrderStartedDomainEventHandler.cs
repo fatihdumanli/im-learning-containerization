@@ -1,6 +1,7 @@
 using System;
 using DomainDispatching.DomainEvent;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using Ordering.Domain.AggregatesModel.BuyerAggregate;
 using Ordering.Domain.DomainEvents;
 
@@ -19,11 +20,24 @@ namespace Ordering.API.Application.DomainEventHandlers
 
         public void Handle(OrderStartedDomainEvent domainEvent)
         {
-            _logger.LogInformation(" [x] OrderStartedDomainEventHandler.Handle(): Handling OrderStartedDomainEvent domain event...");
+            _logger.LogInformation(" [x] OrderStartedDomainEventHandler.Handle(): Handling OrderStartedDomainEvent domain event: {0}",
+                JsonConvert.SerializeObject(domainEvent));
 
-            var buyer = _buyerRepository.FindAsync(domainEvent.Buyer);
+            _logger.LogInformation(" [x] OrderStartedDomainEventHandler.Handle(): Looking for buyer: {0}", domainEvent.Buyer);
+            Buyer buyer = _buyerRepository.FindByNameAsync(domainEvent.Buyer);
+
+            var isBuyerExisted = buyer != null;
+            if(isBuyerExisted)
+            {
+                _logger.LogInformation(" [x] OrderStartedDomainEventHandler.Handle(): Buyer found in persistance.", domainEvent.Buyer);
+            }
+            else 
+            {
+                buyer = new Buyer("fatih", "fatih");
+            }        
 
 
+            buyer.ValidatePaymentMethod();                          
             
         }
     }

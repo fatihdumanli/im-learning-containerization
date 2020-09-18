@@ -32,7 +32,8 @@ namespace Ordering.Domain.AggregatesModel.OrderAggregate
                 Address = address;              
 
                 
-                this.AddDomainEvent(new OrderStartedDomainEvent(userId));
+                this.AddDomainEvent(new OrderStartedDomainEvent(userId, cardNumber, cardHolderName, cardSecurityNumber, 
+                    cardExpiration, cardTypeId));
                 
         }
         protected Order()

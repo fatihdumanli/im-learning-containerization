@@ -44,7 +44,8 @@ namespace Ordering.API.Application.Command
     {
 
         public CreateOrderCommand(string buyerId, string street, string city, string state, string zipCode, 
-            string country, List<BasketItem> basketItems)
+            string country, string cardNumber, string cardHolderName, string cvv, DateTime expiration, int cardTypeId,
+             List<BasketItem> basketItems)
         {
             this.BuyerId = buyerId;
             this.City = city;
@@ -52,6 +53,11 @@ namespace Ordering.API.Application.Command
             this.State = state;
             this.Street = street;
             this.ZipCode = zipCode;
+            this.CardNumber = cardNumber;
+            this.CardTypeId = cardTypeId;
+            this.CardHolderName = cardHolderName;
+            this.CardExpiration = expiration;
+            this.Cvv = cvv;
             this.OrderItems = basketItems.ToOrderItemDtoList().ToList();
         }
 
@@ -63,6 +69,11 @@ namespace Ordering.API.Application.Command
         public string Country { get; private set; }
         public string ZipCode { get; private set; }
         public string BuyerId { get; private set; }
+        public int CardTypeId { get; private set; }
+        public string CardNumber { get; private set; }
+        public string CardHolderName { get; private set; }
+        public string Cvv { get; private set; }
+        public DateTime CardExpiration { get; private set; }
 
     }
 }

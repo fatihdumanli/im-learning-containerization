@@ -19,7 +19,7 @@ namespace Ordering.API.Application.Command
 
         public void Handle(CreateOrderCommand command)
         {
-            _logger.LogInformation(" [x] CreateOrderCommandHandler.Handle(): Handling the CreateOrderCommand...");
+            _logger.LogInformation(" [x] CreateOrderCommandHandler.Handle(): Handling the CreateOrderCommand: {0}", JsonConvert.SerializeObject(command));
 
             var address = new Address(street: command.Street, city: command.City, state: command.State,
                 country: command.Country, zipCode: command.ZipCode);
@@ -27,7 +27,8 @@ namespace Ordering.API.Application.Command
             _logger.LogInformation(string.Format(" [x] CreateOrderCommandHandler.Handle(): Created 'Address' ValueObject: {0}",
                 JsonConvert.SerializeObject(address)));
 
-            var order = new Order(command.BuyerId, command.BuyerId, address, 0, null, null, null, DateTime.Now);
+            var order = new Order(command.BuyerId, command.BuyerId, address, command.CardTypeId, command.CardNumber, command.Cvv,
+                cardHolderName: command.CardHolderName, cardExpiration: command.CardExpiration);
 
             _logger.LogInformation(string.Format(" [x] CreateOrderCommandHandler.Handle(): Created 'Order' Entity: {0}",
                 JsonConvert.SerializeObject(order)));
