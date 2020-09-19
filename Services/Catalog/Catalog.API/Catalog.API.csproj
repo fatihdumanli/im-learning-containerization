@@ -30,6 +30,8 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\BuildingBlocks\EventBus\EventBus.csproj" />
     <ProjectReference Include="..\..\..\BuildingBlocks\RabbitMQEventBus\RabbitMQEventBus.csproj" />
+    <ProjectReference Include="..\..\..\BuildingBlocks\IntegrationEventLog\IntegrationEventLog.csproj" />
+
   </ItemGroup>
 
 

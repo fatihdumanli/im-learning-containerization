@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -8,6 +9,7 @@ using Autofac.Extensions.DependencyInjection;
 using Catalog.API.Model;
 using EventBus;
 using EventBus.Abstractions;
+using IntegrationEventLog;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -43,6 +45,9 @@ namespace Catalog.API
         public void ConfigureServices(IServiceCollection services)
         {
             var s = Configuration["ConnectionString"];
+
+            services.AddTransient<Func<DbConnection, IIntegrationEventLogService>>(
+                sp => (DbConnection c) => new IntegrationEventLogService(c));
 
             services.AddSingleton<IEventBus, EventBusRabbitMQ>(sp =>
             {                  
