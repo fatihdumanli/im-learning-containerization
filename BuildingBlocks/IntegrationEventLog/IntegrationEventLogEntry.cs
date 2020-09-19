@@ -11,7 +11,7 @@ namespace IntegrationEventLog
         public string EventTypeName { get; private set; }
         public IntegrationEvent IntegrationEvent { get; private set; }  
                    
-        public EventStateEnum State { get; private set; }
+        public EventStateEnum State { get; set; }
         public DateTime CreationTime { get; private set; }
         public string Content { get; private set; }
         public string TransactionId { get; private set; }
