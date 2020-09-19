@@ -7,12 +7,12 @@ using Ordering.Domain.DomainEvents;
 
 namespace Ordering.API.Application.DomainEventHandlers
 {
-    public class OrderStartedDomainEventHandler : IDomainEventHandler<OrderStartedDomainEvent>
+    public class ValidateOrAddBuyerWhenOrderStarted : IDomainEventHandler<OrderStartedDomainEvent>
     {
-        private ILogger<OrderStartedDomainEventHandler> _logger;
+        private ILogger<ValidateOrAddBuyerWhenOrderStarted> _logger;
         private IBuyerRepository _buyerRepository;
-        public OrderStartedDomainEventHandler(IBuyerRepository repository, 
-            ILogger<OrderStartedDomainEventHandler> logger)
+        public ValidateOrAddBuyerWhenOrderStarted(IBuyerRepository repository, 
+            ILogger<ValidateOrAddBuyerWhenOrderStarted> logger)
         {
             _logger = logger;
             _buyerRepository = repository ?? throw new ArgumentNullException("OrderStartedDomainEventHandler needs an IBuyerRepository implementation.");
@@ -39,9 +39,20 @@ namespace Ordering.API.Application.DomainEventHandlers
             _logger.LogInformation(" [x] OrderStartedDomainEventHandler.Handle(): Payment method is being validated...");
 
             buyer.ValidatePaymentMethod(cardNumber: domainEvent.CardNumber, cardHolderName: domainEvent.CardHolderName,
-                cvv: domainEvent.Cvv, cardTypeId: domainEvent.CardTypeId, expiration: domainEvent.Expiration);     
+                cvv: domainEvent.Cvv, cardTypeId: domainEvent.CardTypeId, expiration: domainEvent.Expiration);   
 
+
+            if(isBuyerExisted) 
+            {
+                _buyerRepository.Update(buyer);
+            }  
+
+            else 
+            {
+                _buyerRepository.Add(buyer);
+            }
             _logger.LogInformation(" [x] OrderStartedDomainEventHandler.Handle(): Payment method is validated!");
+            _buyerRepository.UnitOfWork.SaveEntitiesAsync();
         }
     }
 }

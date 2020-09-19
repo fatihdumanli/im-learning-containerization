@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using Ordering.Domain.AggregatesModel.BuyerAggregate;
 using Ordering.Domain.AggregatesModel.OrderAggregate;
 using Ordering.Domain.SharedKernel;
@@ -80,8 +81,16 @@ namespace Ordering.Infrastructure
                 .Entries<Entity>()
                 .Where(x => x.Entity.DomainEvents != null && x.Entity.DomainEvents.Any());
             
-            _logger.LogInformation(" [x] OrderingContext.SaveEntitiesAsync(): {0} entity found in the OrderingContext.ChangeTracker.", domainEntities.Count());
+            _logger.LogInformation(" [x] OrderingContext.SaveEntitiesAsync(): {0} entity found in the OrderingContext.ChangeTracker.",
+             domainEntities.Count());
 
+             foreach(var item in domainEntities)
+             {
+                 _logger.LogInformation(" Entity Type: {0}, Entity Values: {1}", item.Entity.GetType().Name,
+                     JsonConvert.SerializeObject(item.Entity));
+             }
+
+            
             
             var domainEvents = domainEntities
                 .SelectMany(x => x.Entity.DomainEvents)

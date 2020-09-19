@@ -21,7 +21,7 @@ namespace Ordering.Domain.SharedKernel
         }      
         protected List<IDomainEvent> _domainEvents;
         
-        public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
+        public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents?.AsReadOnly();
         
         protected void AddDomainEvent(IDomainEvent domainEvent) 
         {

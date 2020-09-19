@@ -244,6 +244,7 @@ namespace Catalog.API.Controllers
 
                 _eventBus.Publish(productPriceChangeEvent);  
                 await _catalogContext.SaveChangesAsync();      
+                
                 // Achieving atomicity between original Catalog database operation and the IntegrationEventLog thanks to a local transaction
                 //await _catalogIntegrationEventService.SaveEventAndCatalogContextChangesAsync(priceChangedEvent);
 

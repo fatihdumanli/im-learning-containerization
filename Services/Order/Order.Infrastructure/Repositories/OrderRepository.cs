@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Ordering.Domain.AggregatesModel.OrderAggregate;
 using Ordering.Domain.SharedKernel;
@@ -15,10 +16,17 @@ namespace Ordering.Infrastructure.Repositories
         {
             this._context = context;
             this._logger = logger;
-
-
+            
             _logger.LogInformation("[x] OrderRepository: Creating an OrderRepository instance.");
-            _logger.LogInformation(string.Format("Order count: {0}",_context.Orders.Count()));
+
+           _logger.LogWarning(" [x] OrderRepository: BEGINNING NEW TRANSACTION...");
+           var transaction = _context.Database.BeginTransaction();
+
+
+           _logger.LogWarning(" [x] OrderRepository: TRANSACTION ID: {0}", transaction.TransactionId);
+
+
+            
         }
 
         public IUnitOfWork UnitOfWork 

@@ -11,9 +11,9 @@ namespace Ordering.API.Application.Command
         public int ProductId { get; private set; }
         public string ProductName { get; private set; }
         public decimal UnitPrice { get; private set; }
-        public decimal Units { get; private set; }
+        public int Units { get; private set; }
 
-        public OrderItemDto(int productId, string productName, decimal unitPrice, decimal units)
+        public OrderItemDto(int productId, string productName, decimal unitPrice, int units)
         {
             this.ProductId = ProductId;
             this.ProductName = productName;

@@ -19,6 +19,7 @@ namespace Ordering.API.Application.Command
 
         public void Handle(CreateOrderCommand command)
         {
+            
             _logger.LogInformation(" [x] CreateOrderCommandHandler.Handle(): Handling the CreateOrderCommand: {0}", JsonConvert.SerializeObject(command));
 
             var address = new Address(street: command.Street, city: command.City, state: command.State,
@@ -32,6 +33,11 @@ namespace Ordering.API.Application.Command
 
             _logger.LogInformation(string.Format(" [x] CreateOrderCommandHandler.Handle(): Created 'Order' Entity: {0}",
                 JsonConvert.SerializeObject(order)));
+
+            foreach(var item in command.OrderItems)
+            {
+                order.AddOrderItem(item.ProductId, item.ProductName, item.UnitPrice, 0, string.Empty, item.Units);
+            }
 
             _repository.Add(order);
             _logger.LogInformation(" [X] CreateOrderCommandHandler.Handle(): Order aggregate added to DbSet, calling SaveEntitiesAsync()...");
