@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using EventBus.Events;
 using Microsoft.EntityFrameworkCore;
@@ -13,7 +14,15 @@ namespace IntegrationEventLog
     {
         private readonly IntegrationEventLogContext _integrationEventLogContext;
         private readonly DbConnection _dbConnection;
-        private readonly List<Type> _eventTypes;
+
+        public IntegrationEventLogService(DbConnection dbConnection)
+        {
+            _dbConnection = dbConnection ?? throw new ArgumentNullException(nameof(dbConnection));
+            _integrationEventLogContext = new IntegrationEventLogContext(
+                new DbContextOptionsBuilder<IntegrationEventLogContext>()
+                    .UseSqlServer(_dbConnection)
+                    .Options);
+        }
 
         public Task MarkEventAsFailedAsync(Guid eventId)
         {
