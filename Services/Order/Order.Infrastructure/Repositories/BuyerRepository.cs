@@ -56,6 +56,7 @@ namespace Ordering.Infrastructure.Repositories
         {
             var buyer = _context.Buyers
                 .Where(b => b.Name == name)
+                .Include(b => b.PaymentMethods)
                 .SingleOrDefault();
 
             return buyer;        

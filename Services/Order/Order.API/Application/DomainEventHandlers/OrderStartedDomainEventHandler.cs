@@ -36,9 +36,12 @@ namespace Ordering.API.Application.DomainEventHandlers
                 buyer = new Buyer("fatih", "fatih");
             }        
 
+            _logger.LogInformation(" [x] OrderStartedDomainEventHandler.Handle(): Payment method is being validated...");
 
-            buyer.ValidatePaymentMethod();                          
-            
+            buyer.ValidatePaymentMethod(cardNumber: domainEvent.CardNumber, cardHolderName: domainEvent.CardHolderName,
+                cvv: domainEvent.Cvv, cardTypeId: domainEvent.CardTypeId, expiration: domainEvent.Expiration);     
+
+            _logger.LogInformation(" [x] OrderStartedDomainEventHandler.Handle(): Payment method is validated!");
         }
     }
 }
