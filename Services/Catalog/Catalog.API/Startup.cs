@@ -110,8 +110,8 @@ namespace Catalog.API
 
             services.AddTransient<IIntegrationEventLogService, IntegrationEventLogService>(sp => {
                 var context = sp.GetRequiredService<CatalogContext>();
-
-                return new IntegrationEventLogService(context.Database.GetDbConnection());
+                var logger = sp.GetRequiredService<ILogger<IntegrationEventLogService>>();
+                return new IntegrationEventLogService(context.Database.GetDbConnection(), logger);
             });
         }
 

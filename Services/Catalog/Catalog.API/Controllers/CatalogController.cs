@@ -240,24 +240,37 @@ namespace Catalog.API.Controllers
 
             if (raiseProductPriceChangedEvent) // Save product's data and publish integration event through the Event Bus if price has changed
             {
+                _logger.LogInformation(" [x] CatalogController.UpdateProduct(): Price has changed, integration event is being prepared...");
 
                 var productPriceChangeEvent = new ProductPriceChangedIntegrationEvent(productToUpdate.Id,
                     oldPrice, productToUpdate.Price);
 
+                var strategy = _catalogContext.Database.CreateExecutionStrategy();
+                _logger.LogInformation(" [x] CatalogController.UpdateProductAsync(): Beginning new transaction to save event and commit changes.");
+                await strategy.Execute(async () => {
+                    
+                    using(var transaction = _catalogContext.Database.BeginTransaction())
+                    {   
+                        await _eventLogService.SaveEventAsync(productPriceChangeEvent, transaction);
+                        await _catalogContext.SaveChangesAsync();      
+                        transaction.Commit();
+                        _logger.LogInformation(" [x] CatalogController.UpdateProductAsync(): Transaction ({0}) has been committed.", transaction.TransactionId);
+                    }
+                });
 
-                var transaction = _catalogContext.Database.BeginTransaction();
-                await _eventLogService.SaveEventAsync(productPriceChangeEvent, transaction);
-                await _catalogContext.SaveChangesAsync();      
-                transaction.Commit();
-                
+                try
+                {
+                    await _eventLogService.MarkEventAsInProgressAsync(productPriceChangeEvent.Id);
+                     _eventBus.Publish(productPriceChangeEvent);
+                    await _eventLogService.MarkEventAsPublishedAsync(productPriceChangeEvent.Id);    
+                } 
 
-                //_eventBus.Publish(productPriceChangeEvent);  
-
-                // Achieving atomicity between original Catalog database operation and the IntegrationEventLog thanks to a local transaction
-                //await _catalogIntegrationEventService.SaveEventAndCatalogContextChangesAsync(priceChangedEvent);
-
-                // Publish through the Event Bus and mark the saved event as published
-                //await _catalogIntegrationEventService.PublishThroughEventBusAsync(priceChangedEvent);
+                catch(Exception e)
+                {
+                    _logger.LogError(e, " [x] CatalogController.UpdateProductAsync(): Fail when publishing integration event {0}.", productPriceChangeEvent.Id);
+                    await _eventLogService.MarkEventAsFailedAsync(productPriceChangeEvent.Id);    
+                }
+                          
             }
             else // Just save the updated product because the Product's Price hasn't changed.
             {

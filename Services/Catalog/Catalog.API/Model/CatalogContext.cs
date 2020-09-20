@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,14 +10,23 @@ namespace Catalog.API.Model
 {
     public class CatalogContext : DbContext
     {
-        public CatalogContext(DbContextOptions<CatalogContext> options) : base(options)
+        private ILogger<CatalogContext> _logger;
+        public CatalogContext(DbContextOptions<CatalogContext> options, ILogger<CatalogContext> logger) : base(options)
         {
+            _logger = logger;
         }
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            throw new Exception("Simulated dummy exception.");
-            base.SaveChangesAsync();
+            _logger.LogInformation(" [x] CatalogContext.SaveChangesAsync(): Saving changes...");
+            _logger.LogInformation(" [x] Has active transaction?: {0}", this.Database.CurrentTransaction != null);
+
+            if(this.Database.CurrentTransaction != null)
+            {
+                _logger.LogInformation(" [x] Current transaction Id: {0}", this.Database.CurrentTransaction.TransactionId);
+            }
+
+            return base.SaveChangesAsync(cancellationToken);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
