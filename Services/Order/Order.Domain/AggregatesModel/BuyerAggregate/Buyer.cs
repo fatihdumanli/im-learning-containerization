@@ -31,6 +31,7 @@ namespace Ordering.Domain.AggregatesModel.BuyerAggregate
 
         public void ValidatePaymentMethod(string cardNumber, string cardHolderName, string cvv, int cardTypeId, DateTime expiration)
         {
+            throw new Exception("Payment validation failed.");
             //_logger.LogInformation(" Buyer.ValidatePaymentMethod(): Payment method is being validated for the buyer: {0}", this.Name);
             var paymentMethod = _paymentMethods.SingleOrDefault(p => p.IsEqualsTo(cardTypeId, cardNumber, expiration));
             var isPaymentMethodExisting = paymentMethod != null;

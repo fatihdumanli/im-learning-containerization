@@ -24,16 +24,20 @@ namespace Ordering.API.Application.DomainEventHandlers
                 JsonConvert.SerializeObject(domainEvent));
 
             _logger.LogInformation(" [x] OrderStartedDomainEventHandler.Handle(): Looking for buyer: {0}", domainEvent.Buyer);
-            Buyer buyer = _buyerRepository.FindByNameAsync(domainEvent.Buyer);
 
+
+            Buyer buyer = _buyerRepository.FindByNameAsync(domainEvent.Buyer);
+            
             var isBuyerExisted = buyer != null;
+
             if(isBuyerExisted)
             {
                 _logger.LogInformation(" [x] OrderStartedDomainEventHandler.Handle(): Buyer found in persistance.", domainEvent.Buyer);
             }
             else 
             {
-                buyer = new Buyer("fatih", "fatih");
+                _logger.LogInformation(" [x] OrderStartedDomainEventHandler.Handle(): Buyer NOT found in persistance. Creating new Buyer instance...", domainEvent.Buyer);
+                buyer = new Buyer(domainEvent.Buyer, domainEvent.Buyer);
             }        
 
             _logger.LogInformation(" [x] OrderStartedDomainEventHandler.Handle(): Payment method is being validated...");
@@ -51,6 +55,7 @@ namespace Ordering.API.Application.DomainEventHandlers
             {
                 _buyerRepository.Add(buyer);
             }
+            
             _logger.LogInformation(" [x] OrderStartedDomainEventHandler.Handle(): Payment method is validated!");
             _buyerRepository.UnitOfWork.SaveEntitiesAsync();
         }

@@ -40,6 +40,7 @@ namespace Ordering.API.Application.Command
             }
 
             _repository.Add(order);
+            
             _logger.LogInformation(" [X] CreateOrderCommandHandler.Handle(): Order aggregate added to DbSet, calling SaveEntitiesAsync()...");
             _logger.LogInformation(" [X] CreateOrderCommandHandler.Handle(): Domain events to be published: " + JsonConvert.SerializeObject(order.DomainEvents));;
 
