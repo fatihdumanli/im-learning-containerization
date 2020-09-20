@@ -17,7 +17,7 @@ namespace Ordering.API.Application.Command
             _repository = repository;
         }
 
-        public void Handle(CreateOrderCommand command)
+        public async void Handle(CreateOrderCommand command)
         {
             
             _logger.LogInformation(" [x] CreateOrderCommandHandler.Handle(): Handling the CreateOrderCommand: {0}", JsonConvert.SerializeObject(command));
@@ -44,7 +44,7 @@ namespace Ordering.API.Application.Command
             _logger.LogInformation(" [X] CreateOrderCommandHandler.Handle(): Order aggregate added to DbSet, calling SaveEntitiesAsync()...");
             _logger.LogInformation(" [X] CreateOrderCommandHandler.Handle(): Domain events to be published: " + JsonConvert.SerializeObject(order.DomainEvents));;
 
-            var result = _repository.UnitOfWork.SaveEntitiesAsync();
+            var result = await _repository.UnitOfWork.SaveEntitiesAsync();
         }
     }
 }

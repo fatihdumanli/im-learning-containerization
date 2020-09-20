@@ -2,6 +2,7 @@ using DomainDispatching;
 using EventBus.Abstractions;
 using Microsoft.Extensions.Logging;
 using Ordering.API.Application.Command;
+using Ordering.API.Application.Command.OrderingCommandService;
 using Ordering.API.Application.IntegrationEvents.Events;
 using Ordering.Domain.AggregatesModel.OrderAggregate;
 using System.Threading.Tasks;
@@ -11,12 +12,12 @@ namespace Ordering.API.Application.IntegrationEvents.EventHandling
     public class UserCheckoutAcceptedIntegrationEventHandler : IIntegrationEventHandler<UserCheckoutAcceptedIntegrationEvent>
     {
         private ILogger<UserCheckoutAcceptedIntegrationEventHandler> _logger;
-        private DomainDispatcher _commandDispatcher;
+        private IOrderingCommandService _commandService;
         public UserCheckoutAcceptedIntegrationEventHandler(ILogger<UserCheckoutAcceptedIntegrationEventHandler> logger,
-            DomainDispatcher cd)
+            IOrderingCommandService commandService)
         {
             this._logger = logger;
-            this._commandDispatcher = cd;
+            this._commandService = commandService;
         }
 
         public Task Handle(UserCheckoutAcceptedIntegrationEvent @event)
@@ -29,8 +30,7 @@ namespace Ordering.API.Application.IntegrationEvents.EventHandling
                 @event.ZipCode, @event.Country, cardNumber: @event.CardNumber, cardHolderName: @event.CardHolderName,
                 cvv: @event.CardSecurityNumber, expiration: @event.CardExpiration, cardTypeId: @event.CardTypeId, @event.Basket.Items);
                 
-            _commandDispatcher.DispatchCommand<CreateOrderCommand>(command);
-                
+            _commandService.SendCommand(command);               
            
             return null;
         }

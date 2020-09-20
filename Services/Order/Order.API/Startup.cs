@@ -20,6 +20,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Ordering.API.Application.Command;
+using Ordering.API.Application.Command.OrderingCommandService;
 using Ordering.API.Application.DomainEventHandlers;
 using Ordering.API.Application.IntegrationEvents.EventHandling;
 using Ordering.API.Application.IntegrationEvents.Events;
@@ -61,8 +62,11 @@ namespace Ordering.API
                                              sqlOptions.MigrationsAssembly(typeof(Startup).GetTypeInfo().Assembly.GetName().Name);
                                              sqlOptions.EnableRetryOnFailure(maxRetryCount: 15, maxRetryDelay: TimeSpan.FromSeconds(30), errorNumbersToAdd: null);
                                          });
-            });
+            }, 
+                ServiceLifetime.Scoped
+            );
 
+            
             services.AddControllers();
             services.AddTransient<IBuyerRepository, BuyerRepository>();
             services.AddTransient<IOrderRepository, OrderRepository>(serviceProvider => 
@@ -88,6 +92,7 @@ namespace Ordering.API
             });
 
             services.AddSingleton<DomainDispatcher>();
+            services.AddSingleton<IOrderingCommandService, OrderingCommandService>();
 
             services.AddLogging(config =>
             {

@@ -63,24 +63,18 @@ namespace Ordering.Infrastructure
         }
 
         //Entity'ler kaydedilirken tüm domain eventlar mediator aracılığıyla publish ediliyor.
-        public Task<bool> SaveEntitiesAsync()
+        public async Task<bool> SaveEntitiesAsync()
         {
             // Dispatch Domain Events collection. 
             // Choices:
-
-
-            // A) Right BEFORE committing data (EF SaveChanges) into the DB will make a single transaction including  
-            // side effects from the domain event handlers which are using the same DbContext with "InstancePerLifetimeScope" or "scoped" lifetime
-
-            //Domain eventları publish et, domain eventların sebep olduğu değişiklerle birlikte bu transaction ı persist et. (aşağıda)
-            //TODO: Bir hata simule edelim domain event handlerların birinde...
-            var entries = this.ChangeTracker.Entries();
-
+          
+    
             
+           #region Publishing domain events.
+            var entries = this.ChangeTracker.Entries();
             var domainEntities = this.ChangeTracker
                 .Entries<Entity>()
-                .Where(x => x.Entity.DomainEvents != null && x.Entity.DomainEvents.Any());
-            
+                .Where(x => x.Entity.DomainEvents != null && x.Entity.DomainEvents.Any());      
             _logger.LogInformation(" [x] OrderingContext.SaveEntitiesAsync(): {0} entity found in the OrderingContext.ChangeTracker.",
              domainEntities.Count());
 
@@ -107,19 +101,14 @@ namespace Ordering.Infrastructure
             
             domainEntities.ToList()
                 .ForEach(entity => entity.Entity.ClearDomainEvents());
-        
-
-            // B) Right AFTER committing data (EF SaveChanges) into the DB will make multiple transactions. 
-            // You will need to handle eventual consistency and compensatory actions in case of failures in any of the Handlers. 
-            
-            //await _mediator.DispatchDomainEventsAsync(this);
-
+            #endregion
             // After executing this line all the changes (from the Command Handler and Domain Event Handlers) 
             // performed through the DbContext will be committed
             _logger.LogInformation(" [x] OrderingContext.SaveEntitiesAsync(): Entities are being saved to persistance.");
-            var result = base.SaveChanges();
+            var result = this.SaveChanges();
             _logger.LogInformation(string.Format(" [x] OrderingContext.SaveEntitiesAsync(): Entities are persisted successfully. Persisted entity count: {0}", result));
-            return null;
+            
+            return true;
         }
 
         public async Task<IDbContextTransaction> BeginTransactionAsync()
@@ -138,7 +127,7 @@ namespace Ordering.Infrastructure
 
             try 
             {
-                await SaveChangesAsync();
+                this.SaveChanges();
                 transaction.Commit();
             } 
             
@@ -174,6 +163,12 @@ namespace Ordering.Infrastructure
                     _currentTransaction = null;
                 }
             }
+        }
+
+        public override int SaveChanges()
+        {
+            _logger.LogWarning(" [x] OrderingContext.SaveChangesAsync(): Current transaction: {0}", this.Database.CurrentTransaction);
+            return base.SaveChanges();
         }
 
         public Task<int> SaveChangesAsync()

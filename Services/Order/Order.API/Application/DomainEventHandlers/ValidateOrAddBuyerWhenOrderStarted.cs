@@ -18,7 +18,7 @@ namespace Ordering.API.Application.DomainEventHandlers
             _buyerRepository = repository ?? throw new ArgumentNullException("OrderStartedDomainEventHandler needs an IBuyerRepository implementation.");
         }
 
-        public void Handle(OrderStartedDomainEvent domainEvent)
+        public async void Handle(OrderStartedDomainEvent domainEvent)
         {
             _logger.LogInformation(" [x] OrderStartedDomainEventHandler.Handle(): Handling OrderStartedDomainEvent domain event: {0}",
                 JsonConvert.SerializeObject(domainEvent));
@@ -57,7 +57,7 @@ namespace Ordering.API.Application.DomainEventHandlers
             }
             
             _logger.LogInformation(" [x] OrderStartedDomainEventHandler.Handle(): Payment method is validated!");
-            _buyerRepository.UnitOfWork.SaveEntitiesAsync();
+            await _buyerRepository.UnitOfWork.SaveEntitiesAsync();
         }
     }
 }
