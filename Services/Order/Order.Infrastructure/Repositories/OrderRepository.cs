@@ -17,16 +17,7 @@ namespace Ordering.Infrastructure.Repositories
             this._context = context;
             this._logger = logger;
             
-            _logger.LogInformation("[x] OrderRepository: Creating an OrderRepository instance.");
-
-           _logger.LogWarning(" [x] OrderRepository: BEGINNING NEW TRANSACTION...");
-           var transaction = _context.Database.BeginTransaction();
-
-
-           _logger.LogWarning(" [x] OrderRepository: TRANSACTION ID: {0}", transaction.TransactionId);
-
-
-            
+            _logger.LogInformation("[x] OrderRepository: Creating an OrderRepository instance.");           
         }
 
         public IUnitOfWork UnitOfWork 
