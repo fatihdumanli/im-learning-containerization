@@ -46,8 +46,6 @@ namespace Catalog.API
         {
             var s = Configuration["ConnectionString"];
 
-            services.AddTransient<Func<DbConnection, IIntegrationEventLogService>>(
-                sp => (DbConnection c) => new IntegrationEventLogService(c));
 
             services.AddSingleton<IEventBus, EventBusRabbitMQ>(sp =>
             {                  
@@ -98,6 +96,23 @@ namespace Catalog.API
                                              sqlOptions.EnableRetryOnFailure(maxRetryCount: 15, maxRetryDelay: TimeSpan.FromSeconds(30), errorNumbersToAdd: null);
                                          });
                 });
+
+            services.AddDbContext<IntegrationEventLogContext>(options =>
+            {
+                options.UseSqlServer(Configuration["ConnectionString"],
+                                     sqlServerOptionsAction: sqlOptions =>
+                                     {
+                                         sqlOptions.MigrationsAssembly(typeof(Startup).GetTypeInfo().Assembly.GetName().Name);
+                                         //Configuring Connection Resiliency: https://docs.microsoft.com/en-us/ef/core/miscellaneous/connection-resiliency 
+                                         sqlOptions.EnableRetryOnFailure(maxRetryCount: 15, maxRetryDelay: TimeSpan.FromSeconds(30), errorNumbersToAdd: null);
+                                     });
+            });
+
+            services.AddTransient<IIntegrationEventLogService, IntegrationEventLogService>(sp => {
+                var context = sp.GetRequiredService<CatalogContext>();
+
+                return new IntegrationEventLogService(context.Database.GetDbConnection());
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
