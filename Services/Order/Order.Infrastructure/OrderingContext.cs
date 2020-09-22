@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using DomainDispatching;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -18,8 +19,8 @@ namespace Ordering.Infrastructure
     public class OrderingContext : DbContext, IUnitOfWork
     {
         private readonly ILogger<OrderingContext> _logger;
-        private DomainDispatcher _domainDispatcher;
         public const string DEFAULT_SCHEMA = "ordering";
+        private IMediator _mediator;
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<PaymentMethod> Payments { get; set; }
@@ -29,12 +30,12 @@ namespace Ordering.Infrastructure
         private IDbContextTransaction _currentTransaction;
         public OrderingContext(DbContextOptions<OrderingContext> options,
             ILogger<OrderingContext> logger,
-            DomainDispatcher dispatcher) : base(options) 
+            IMediator mediator) : base(options) 
         {             
-
+            Guid objIdentifier = Guid.NewGuid();
             _logger = logger ?? throw new ArgumentNullException("Logger is null!");
-            _logger.LogInformation(" [x] OrderContext: Creating an instance of OrderContext class.");
-            _domainDispatcher = dispatcher ?? throw new ArgumentNullException("OrderingContext needs an DomainDispatcher object to publish domain events!");
+            _logger.LogInformation(" [x] OrderContext: Creating an instance of OrderContext class. Guid: {0}", objIdentifier);
+            _mediator = mediator ?? throw new ArgumentNullException("OrderingContext needs an Mediator object to publish domain events!");
             System.Diagnostics.Debug.WriteLine("options: " + options);
         }
 
@@ -92,20 +93,27 @@ namespace Ordering.Infrastructure
 
             _logger.LogInformation(" [x] OrderingContext.SaveEntitiesAsync(): {0} domain events found to publish.", domainEvents.Count);
 
+            /*
+             * Önce clear etmek gerek,
+             * Çünkü domain event handler lar buraya çağırıyor, clear edilmeden yeni eventlar yayınlanıyor,
+             * Bu da deadlock a, sonrasında stackOverflow'a yol açıyor.              
+            */
+            domainEntities.ToList()
+             .ForEach(entity => entity.Entity.ClearDomainEvents());
 
-            foreach(var domainEvent in domainEvents)
+            foreach (var domainEvent in domainEvents)
             {
                 _logger.LogInformation("[x] OrderingContext.SaveEntitiesAsync(): Publishing domain event: {0}", domainEvent.GetType().Name);
-                _domainDispatcher.PublishDomainEvent(domainEvent);
+                await _mediator.Publish(domainEvent);
             }
             
-            domainEntities.ToList()
-                .ForEach(entity => entity.Entity.ClearDomainEvents());
+        
+                
             #endregion
             // After executing this line all the changes (from the Command Handler and Domain Event Handlers) 
             // performed through the DbContext will be committed
             _logger.LogInformation(" [x] OrderingContext.SaveEntitiesAsync(): Entities are being saved to persistance.");
-            var result = this.SaveChanges();
+            var result = await base.SaveChangesAsync();
             _logger.LogInformation(string.Format(" [x] OrderingContext.SaveEntitiesAsync(): Entities are persisted successfully. Persisted entity count: {0}", result));
             
             return true;
@@ -127,7 +135,7 @@ namespace Ordering.Infrastructure
 
             try 
             {
-                this.SaveChanges();
+                await SaveChangesAsync();
                 transaction.Commit();
             } 
             

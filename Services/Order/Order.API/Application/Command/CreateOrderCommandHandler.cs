@@ -1,12 +1,14 @@
 using System;
-using DomainDispatching.Commanding;
+using System.Threading;
+using System.Threading.Tasks;
+using MediatR;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Ordering.Domain.AggregatesModel.OrderAggregate;
 
 namespace Ordering.API.Application.Command
 {
-    public class CreateOrderCommandHandler : ICommandHandler<CreateOrderCommand>
+    public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, bool>
     {
         private ILogger<CreateOrderCommandHandler> _logger;
         private IOrderRepository _repository;
@@ -17,10 +19,11 @@ namespace Ordering.API.Application.Command
             _repository = repository;
         }
 
-        public async void Handle(CreateOrderCommand command)
+    
+
+        public async Task<bool> Handle(CreateOrderCommand command, CancellationToken cancellationToken)
         {
-            
-            _logger.LogInformation(" [x] CreateOrderCommandHandler.Handle(): Handling the CreateOrderCommand: {0}", JsonConvert.SerializeObject(command));
+               _logger.LogInformation(" [x] CreateOrderCommandHandler.Handle(): Handling the CreateOrderCommand: {0}", JsonConvert.SerializeObject(command));
 
             var address = new Address(street: command.Street, city: command.City, state: command.State,
                 country: command.Country, zipCode: command.ZipCode);
@@ -44,7 +47,7 @@ namespace Ordering.API.Application.Command
             _logger.LogInformation(" [X] CreateOrderCommandHandler.Handle(): Order aggregate added to DbSet, calling SaveEntitiesAsync()...");
             _logger.LogInformation(" [X] CreateOrderCommandHandler.Handle(): Domain events to be published: " + JsonConvert.SerializeObject(order.DomainEvents));;
 
-            var result = await _repository.UnitOfWork.SaveEntitiesAsync();
+            return await _repository.UnitOfWork.SaveEntitiesAsync();
         }
     }
 }

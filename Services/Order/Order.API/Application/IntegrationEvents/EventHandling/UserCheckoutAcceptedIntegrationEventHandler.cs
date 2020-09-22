@@ -1,8 +1,8 @@
 using DomainDispatching;
 using EventBus.Abstractions;
+using MediatR;
 using Microsoft.Extensions.Logging;
 using Ordering.API.Application.Command;
-using Ordering.API.Application.Command.OrderingCommandService;
 using Ordering.API.Application.IntegrationEvents.Events;
 using Ordering.Domain.AggregatesModel.OrderAggregate;
 using System.Threading.Tasks;
@@ -12,15 +12,15 @@ namespace Ordering.API.Application.IntegrationEvents.EventHandling
     public class UserCheckoutAcceptedIntegrationEventHandler : IIntegrationEventHandler<UserCheckoutAcceptedIntegrationEvent>
     {
         private ILogger<UserCheckoutAcceptedIntegrationEventHandler> _logger;
-        private IOrderingCommandService _commandService;
+        private IMediator _mediator;
         public UserCheckoutAcceptedIntegrationEventHandler(ILogger<UserCheckoutAcceptedIntegrationEventHandler> logger,
-            IOrderingCommandService commandService)
+            IMediator mediator)
         {
             this._logger = logger;
-            this._commandService = commandService;
+            this._mediator = mediator;
         }
 
-        public Task Handle(UserCheckoutAcceptedIntegrationEvent @event)
+        public async Task Handle(UserCheckoutAcceptedIntegrationEvent @event)
         {
             _logger.LogInformation(string.Format("[x] UserCheckoutAcceptedIntegrationEventHandler.Handle(): Received integration event: {0}",
                 Newtonsoft.Json.JsonConvert.SerializeObject(@event)));
@@ -30,9 +30,8 @@ namespace Ordering.API.Application.IntegrationEvents.EventHandling
                 @event.ZipCode, @event.Country, cardNumber: @event.CardNumber, cardHolderName: @event.CardHolderName,
                 cvv: @event.CardSecurityNumber, expiration: @event.CardExpiration, cardTypeId: @event.CardTypeId, @event.Basket.Items);
                 
-            _commandService.SendCommand(command);               
-           
-            return null;
+            await _mediator.Send(command);
+
         }
     }
 }

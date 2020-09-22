@@ -4,6 +4,10 @@
     <ProjectReference Include="..\..\..\..\command-dispatcher\command-dispatcher.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="8.1.0" />
+  </ItemGroup>
+
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>

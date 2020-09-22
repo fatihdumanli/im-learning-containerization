@@ -1,9 +1,10 @@
 using DomainDispatching.DomainEvent;
+using MediatR;
 using System;
 
 namespace Ordering.Domain.DomainEvents
 {
-    public class OrderStartedDomainEvent : IDomainEvent
+    public class OrderStartedDomainEvent : INotification
     {
         public string Buyer { get; private set; }
         public string CardNumber { get; private set; }

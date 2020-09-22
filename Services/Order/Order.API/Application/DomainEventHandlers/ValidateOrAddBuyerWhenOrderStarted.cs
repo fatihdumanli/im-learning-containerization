@@ -1,5 +1,8 @@
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 using DomainDispatching.DomainEvent;
+using MediatR;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Ordering.Domain.AggregatesModel.BuyerAggregate;
@@ -7,7 +10,7 @@ using Ordering.Domain.DomainEvents;
 
 namespace Ordering.API.Application.DomainEventHandlers
 {
-    public class ValidateOrAddBuyerWhenOrderStarted : IDomainEventHandler<OrderStartedDomainEvent>
+    public class ValidateOrAddBuyerWhenOrderStarted : INotificationHandler<OrderStartedDomainEvent>
     {
         private ILogger<ValidateOrAddBuyerWhenOrderStarted> _logger;
         private IBuyerRepository _buyerRepository;
@@ -18,8 +21,9 @@ namespace Ordering.API.Application.DomainEventHandlers
             _buyerRepository = repository ?? throw new ArgumentNullException("OrderStartedDomainEventHandler needs an IBuyerRepository implementation.");
         }
 
-        public async void Handle(OrderStartedDomainEvent domainEvent)
+        public async Task Handle(OrderStartedDomainEvent domainEvent, CancellationToken cancellationToken)
         {
+            
             _logger.LogInformation(" [x] OrderStartedDomainEventHandler.Handle(): Handling OrderStartedDomainEvent domain event: {0}",
                 JsonConvert.SerializeObject(domainEvent));
 

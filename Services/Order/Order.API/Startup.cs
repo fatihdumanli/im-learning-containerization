@@ -10,6 +10,7 @@ using DomainDispatching.Commanding;
 using DomainDispatching.DomainEvent;
 using EventBus;
 using EventBus.Abstractions;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -20,7 +21,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Ordering.API.Application.Command;
-using Ordering.API.Application.Command.OrderingCommandService;
 using Ordering.API.Application.DomainEventHandlers;
 using Ordering.API.Application.IntegrationEvents.EventHandling;
 using Ordering.API.Application.IntegrationEvents.Events;
@@ -45,9 +45,24 @@ namespace Ordering.API
         public void ConfigureContainer(ContainerBuilder builder)
         {
             builder.RegisterType<UserCheckoutAcceptedIntegrationEventHandler>();
-            builder.RegisterType<CreateOrderCommandHandler>().As<ICommandHandler<CreateOrderCommand>>();
-            builder.RegisterType(typeof(ValidateOrAddBuyerWhenOrderStarted))
-                            .As<IDomainEventHandler<OrderStartedDomainEvent>>();
+            builder.RegisterType<Mediator>().As<IMediator>().InstancePerLifetimeScope();
+
+
+            
+             // Register all the Command classes (they implement IRequestHandler) in assembly holding the Commands
+            builder.RegisterAssemblyTypes(typeof(CreateOrderCommand).GetTypeInfo().Assembly)
+                .AsClosedTypesOf(typeof(IRequestHandler<,>));
+
+            // Register the DomainEventHandler classes (they implement INotificationHandler<>) in assembly holding the Domain Events
+            builder.RegisterAssemblyTypes(typeof(ValidateOrAddBuyerWhenOrderStarted).GetTypeInfo().Assembly)
+                .AsClosedTypesOf(typeof(INotificationHandler<>));
+
+            builder.Register<ServiceFactory>(context =>
+            {
+                var c = context.Resolve<IComponentContext>();
+                return t => c.Resolve(t);
+            });
+
         }
 
         public IConfiguration Configuration { get; }
@@ -68,13 +83,8 @@ namespace Ordering.API
 
             
             services.AddControllers();
-            services.AddTransient<IBuyerRepository, BuyerRepository>();
-            services.AddTransient<IOrderRepository, OrderRepository>(serviceProvider => 
-            {
-                var logger = serviceProvider.GetRequiredService<ILogger<OrderRepository>>();
-                var context = serviceProvider.GetRequiredService<OrderingContext>();
-                return new OrderRepository(context, logger); 
-            });
+            services.AddScoped<IBuyerRepository, BuyerRepository>();
+            services.AddScoped<IOrderRepository, OrderRepository>();
 
             services.AddSingleton<IEventBusSubscriptionManager, InMemoryEventBusSubscriptionManager>(serviceProvider =>
             {
@@ -92,7 +102,6 @@ namespace Ordering.API
             });
 
             services.AddSingleton<DomainDispatcher>();
-            services.AddSingleton<IOrderingCommandService, OrderingCommandService>();
 
             services.AddLogging(config =>
             {

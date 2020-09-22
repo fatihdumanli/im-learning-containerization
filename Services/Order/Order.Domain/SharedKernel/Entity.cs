@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using DomainDispatching.DomainEvent;
+using MediatR;
 
 namespace Ordering.Domain.SharedKernel
 {
@@ -19,15 +20,15 @@ namespace Ordering.Domain.SharedKernel
                 _id = value;
             }
         }      
-        protected List<IDomainEvent> _domainEvents;
+        protected List<INotification> _domainEvents;
         
-        public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents?.AsReadOnly();
+        public IReadOnlyCollection<INotification> DomainEvents => _domainEvents?.AsReadOnly();
         
-        protected void AddDomainEvent(IDomainEvent domainEvent) 
+        protected void AddDomainEvent(INotification domainEvent) 
         {
             if(_domainEvents == null)
             {
-                _domainEvents = new List<IDomainEvent>();
+                _domainEvents = new List<INotification>();
             }
 
             _domainEvents.Add(domainEvent);

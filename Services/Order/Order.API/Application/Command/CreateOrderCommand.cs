@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using MediatR;
 using Ordering.API.Application.Models;
 
 namespace Ordering.API.Application.Command
@@ -40,7 +41,7 @@ namespace Ordering.API.Application.Command
     }
 
 
-    public class CreateOrderCommand : DomainDispatching.Commanding.Command
+    public class CreateOrderCommand : IRequest<bool>
     {
 
         public CreateOrderCommand(string buyerId, string street, string city, string state, string zipCode, 
