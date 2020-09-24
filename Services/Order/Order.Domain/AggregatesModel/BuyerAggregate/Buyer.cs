@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Logging;
+using Ordering.Domain.DomainEvents;
 using Ordering.Domain.Exceptions;
 using Ordering.Domain.SharedKernel;
 
@@ -29,7 +30,7 @@ namespace Ordering.Domain.AggregatesModel.BuyerAggregate
             //_logger.LogInformation(" [x] Buyer: Created a buyer Aggregate.");
         }
 
-        public void ValidatePaymentMethod(string cardNumber, string cardHolderName, string cvv, int cardTypeId, DateTime expiration)
+        public void ValidatePaymentMethod(int orderId, string cardNumber, string cardHolderName, string cvv, int cardTypeId, DateTime expiration)
         {
             //_logger.LogInformation(" Buyer.ValidatePaymentMethod(): Payment method is being validated for the buyer: {0}", this.Name);
             var paymentMethod = _paymentMethods.SingleOrDefault(p => p.IsEqualsTo(cardTypeId, cardNumber, expiration));
@@ -37,7 +38,7 @@ namespace Ordering.Domain.AggregatesModel.BuyerAggregate
             
             if(isPaymentMethodExisting)
             {
-                //addDomainEvent validated
+                AddDomainEvent(new PaymentMethodValidatedDomainEvent(orderId, this, paymentMethod));
                 //_logger.LogInformation(" Buyer.ValidatePaymentMethod(): Payment method is already existed for buyer: {0}", Name);
                 return;
             }
@@ -50,7 +51,8 @@ namespace Ordering.Domain.AggregatesModel.BuyerAggregate
 
             _paymentMethods.Add(paymentMethod);
 
-            //addDomainEvent validated
+            AddDomainEvent(new PaymentMethodValidatedDomainEvent(orderId, this, paymentMethod));
+
             return;
         }
 

@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Ordering.Domain.AggregatesModel.BuyerAggregate;
 using Ordering.Domain.DomainEvents;
+using Ordering.Domain.Exceptions;
 
 namespace Ordering.API.Application.DomainEventHandlers
 {
@@ -46,9 +47,18 @@ namespace Ordering.API.Application.DomainEventHandlers
 
             _logger.LogInformation(" [x] OrderStartedDomainEventHandler.Handle(): Payment method is being validated...");
 
-            buyer.ValidatePaymentMethod(cardNumber: domainEvent.CardNumber, cardHolderName: domainEvent.CardHolderName,
-                cvv: domainEvent.Cvv, cardTypeId: domainEvent.CardTypeId, expiration: domainEvent.Expiration);   
 
+            try
+            {
+                 buyer.ValidatePaymentMethod(orderId: domainEvent.Order.Id, cardNumber: domainEvent.CardNumber, cardHolderName: domainEvent.CardHolderName,
+                    cvv: domainEvent.Cvv, cardTypeId: domainEvent.CardTypeId, expiration: domainEvent.Expiration);   
+            }
+
+            catch(OrderDomainException e)
+            {
+                _logger.LogError(e.Message);
+                throw e;
+            }
 
             if(isBuyerExisted) 
             {

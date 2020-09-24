@@ -20,6 +20,7 @@ namespace Ordering.Domain.AggregatesModel.OrderAggregate
 
         private readonly List<OrderItem> _orderItems;
         public IReadOnlyCollection<OrderItem> OrderItems => _orderItems;
+
         
         public Order(string userId, string userName, Address address, int cardTypeId, string cardNumber, string cardSecurityNumber,
                 string cardHolderName, DateTime cardExpiration, int? buyerId = null, int? paymentMethodId = null) : this()
@@ -32,7 +33,7 @@ namespace Ordering.Domain.AggregatesModel.OrderAggregate
                 Address = address;              
 
                 
-                this.AddDomainEvent(new OrderStartedDomainEvent(userId, cardNumber, cardHolderName, cardSecurityNumber, 
+                AddDomainEvent(new OrderStartedDomainEvent(this, userId, cardNumber, cardHolderName, cardSecurityNumber, 
                     cardExpiration, cardTypeId));
                 
         }
@@ -56,6 +57,16 @@ namespace Ordering.Domain.AggregatesModel.OrderAggregate
                 this._orderItems.Add(orderItem);
             }
         }
-        
+
+        public void SetBuyerId(int? buyerId)
+        {
+            this._buyerId = buyerId;
+        }
+
+        public void SetPaymentMethodId(int paymentMethodId)
+        {
+            this._paymentMethodId = paymentMethodId;
+        }
+                
     }
 }

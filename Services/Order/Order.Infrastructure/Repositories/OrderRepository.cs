@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -31,12 +32,25 @@ namespace Ordering.Infrastructure.Repositories
         public Order Add(Order order)
         {
             _logger.LogInformation(" [x] OrderRepository.Add(): Order item is being added to Order DbSet.");
-            return _context.Orders.Add(order).Entity;
+             var entity = _context.Orders.Add(order).Entity;
+            return entity;
         }
 
-        public Task<Order> GetAsync(int orderId)
+        public async Task<Order> GetAsync(int orderId)
         {
-            throw new System.NotImplementedException();
+            var order = await _context.Orders
+                .Include(x => x.Address)
+                .FirstOrDefaultAsync(o => o.Id == orderId);   
+
+            if(order == null)
+            {
+                   order = _context
+                            .Orders
+                            .Local
+                            .FirstOrDefault(o => o.Id == orderId);
+            }
+            
+            return order;
         }
 
         public void Update(Order order)
