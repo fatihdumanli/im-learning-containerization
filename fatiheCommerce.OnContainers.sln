@@ -21,6 +21,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntegrationEventLog", "Buil
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Order.Infrastructure", "Services\Order\Order.Infrastructure\Order.Infrastructure.csproj", "{C08AD2B3-8B3E-471C-B859-9AD08851A0CF}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Billing", "Services\Billing\Billing.API\Billing.csproj", "{32D37AAA-BAAD-482D-980F-FA12CF428FBD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +65,10 @@ Global
 		{C08AD2B3-8B3E-471C-B859-9AD08851A0CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C08AD2B3-8B3E-471C-B859-9AD08851A0CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C08AD2B3-8B3E-471C-B859-9AD08851A0CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32D37AAA-BAAD-482D-980F-FA12CF428FBD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32D37AAA-BAAD-482D-980F-FA12CF428FBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32D37AAA-BAAD-482D-980F-FA12CF428FBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32D37AAA-BAAD-482D-980F-FA12CF428FBD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
