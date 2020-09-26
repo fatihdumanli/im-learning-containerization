@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using Catalog.API.IntegrationEvents;
 using Catalog.API.Model;
 using EventBus;
 using EventBus.Abstractions;
@@ -32,6 +33,7 @@ namespace Catalog.API
 
         public void ConfigureContainer(ContainerBuilder builder)
         {        
+            builder.RegisterType<OrderStatusChangedToAwaitingStockValidationIntegrationEventHandler>();
         }
 
         public Startup(IConfiguration configuration)
@@ -143,6 +145,8 @@ namespace Catalog.API
         {
             var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
             eventBus.StartConsuming();
+            eventBus.Subscribe<OrderStatusChangedToAwaitingStockValidationIntegrationEvent, OrderStatusChangedToAwaitingStockValidationIntegrationEventHandler>();
+
         }
     }
 }
