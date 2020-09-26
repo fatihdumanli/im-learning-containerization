@@ -6,7 +6,10 @@ using Ordering.API.Application.Models;
 
 namespace Ordering.API.Application.Command
 {
-
+    /*
+        CREATE ORDER COMMAND
+        TRIGGER: USERCHECKOUTACCEPTEDINTEGRATIONEVENT (BASKET)
+    */
     public class OrderItemDto
     {
         public int ProductId { get; private set; }

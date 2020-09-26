@@ -72,7 +72,8 @@ namespace Ordering.Domain.AggregatesModel.OrderAggregate
 
         public void SetStatusAwaitingStockValidation()
         {            
-            this._orderStatusId = OrderStatus.AwaitingValidation.Id;             
+            this._orderStatusId = OrderStatus.AwaitingValidation.Id;          
+            AddDomainEvent(new OrderStatusChangedToAwaitingStockValidationDomainEvent(this.Id, this.OrderItems));
         }
                 
 

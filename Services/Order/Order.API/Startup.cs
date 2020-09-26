@@ -25,6 +25,7 @@ using Ordering.API.Application.Command;
 using Ordering.API.Application.DomainEventHandlers;
 using Ordering.API.Application.IntegrationEvents.EventHandling;
 using Ordering.API.Application.IntegrationEvents.Events;
+using Ordering.API.Application.IntegrationEvents.IntegrationEventService;
 using Ordering.Domain.AggregatesModel.BuyerAggregate;
 using Ordering.Domain.AggregatesModel.OrderAggregate;
 using Ordering.Domain.DomainEvents;
@@ -47,6 +48,7 @@ namespace Ordering.API
         {
             builder.RegisterType<GracePeriodConfirmedForOrderIntegrationEventHandler>();
             builder.RegisterType<UserCheckoutAcceptedIntegrationEventHandler>();
+            builder.RegisterType<OrderingIntegrationEventService>().As<IOrderingIntegrationEventService>();
             builder.RegisterType<Mediator>().As<IMediator>().InstancePerLifetimeScope();
 
 

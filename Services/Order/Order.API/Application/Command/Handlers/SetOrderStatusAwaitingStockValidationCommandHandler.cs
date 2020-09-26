@@ -1,7 +1,11 @@
+using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using Ordering.API.Application.IntegrationEvents.Events;
+using Ordering.API.Application.IntegrationEvents.IntegrationEventService;
 using Ordering.Domain.AggregatesModel.OrderAggregate;
 
 namespace Ordering.API.Application.Command
@@ -10,11 +14,14 @@ namespace Ordering.API.Application.Command
     {
         private IOrderRepository _orderRepository;
         private ILogger<SetOrderStatusAwaitingStockValidationCommandHandler> _logger;
+        private IOrderingIntegrationEventService _integrationEventService;               
 
         public SetOrderStatusAwaitingStockValidationCommandHandler(IOrderRepository orderRepository, 
+            IOrderingIntegrationEventService orderingIntegrationEventService,
             ILogger<SetOrderStatusAwaitingStockValidationCommandHandler> logger)
         {
-            _orderRepository = orderRepository;
+            _orderRepository = orderRepository ?? throw new ArgumentNullException("OrderRepository was null.");
+            _integrationEventService = orderingIntegrationEventService ?? throw new ArgumentNullException("Ordering integration event service was null.");
             _logger = logger;
         }
 
@@ -30,9 +37,10 @@ namespace Ordering.API.Application.Command
                 return false;
             }
 
-            orderToUpdate.SetStatusAwaitingStockValidation();
-            
-
+            //Domain layer
+            orderToUpdate.SetStatusAwaitingStockValidation();   
+    
+            //Infrastructure layer.
             return await _orderRepository.UnitOfWork.SaveEntitiesAsync();         
         }
     }

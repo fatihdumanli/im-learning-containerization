@@ -40,6 +40,7 @@ namespace Ordering.Infrastructure.Repositories
         {
             var order = await _context.Orders
                 .Include(x => x.Address)
+                .Include(o => o.OrderItems)
                 .FirstOrDefaultAsync(o => o.Id == orderId);   
 
             if(order == null)
