@@ -57,6 +57,7 @@ namespace Ordering.Domain.AggregatesModel.OrderAggregate
                 this._orderItems.Add(orderItem);
             }
         }
+        
 
         public void SetBuyerId(int? buyerId)
         {
@@ -67,6 +68,13 @@ namespace Ordering.Domain.AggregatesModel.OrderAggregate
         {
             this._paymentMethodId = paymentMethodId;
         }
+
+
+        public void SetStatusAwaitingStockValidation()
+        {            
+            this._orderStatusId = OrderStatus.AwaitingValidation.Id;             
+        }
                 
+
     }
 }

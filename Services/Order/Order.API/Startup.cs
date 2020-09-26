@@ -44,6 +44,7 @@ namespace Ordering.API
 
         public void ConfigureContainer(ContainerBuilder builder)
         {
+            builder.RegisterType<GracePeriodConfirmedForOrderIntegrationEventHandler>();
             builder.RegisterType<UserCheckoutAcceptedIntegrationEventHandler>();
             builder.RegisterType<Mediator>().As<IMediator>().InstancePerLifetimeScope();
 
@@ -121,6 +122,7 @@ namespace Ordering.API
             var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
             eventBus.StartConsuming();
             eventBus.Subscribe<UserCheckoutAcceptedIntegrationEvent, UserCheckoutAcceptedIntegrationEventHandler>();
+            eventBus.Subscribe<GracePeriodConfirmedForOrderIntegrationEvent, GracePeriodConfirmedForOrderIntegrationEventHandler>();
 
             if (env.IsDevelopment())
             {

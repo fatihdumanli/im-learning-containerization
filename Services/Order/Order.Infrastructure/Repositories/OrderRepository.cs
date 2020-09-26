@@ -49,7 +49,7 @@ namespace Ordering.Infrastructure.Repositories
                             .Local
                             .FirstOrDefault(o => o.Id == orderId);
             }
-            
+                        
             return order;
         }
 

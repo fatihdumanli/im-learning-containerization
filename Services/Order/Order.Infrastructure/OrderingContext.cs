@@ -71,46 +71,59 @@ namespace Ordering.Infrastructure
           
     
             
-           #region Publishing domain events.
-            var entries = this.ChangeTracker.Entries();
-            var domainEntities = this.ChangeTracker
-                .Entries<Entity>()
-                .Where(x => x.Entity.DomainEvents != null && x.Entity.DomainEvents.Any()); 
-                
-                     
-            _logger.LogInformation(" [x] OrderingContext.SaveEntitiesAsync(): {0} entity found in the OrderingContext.ChangeTracker.",
-             domainEntities.Count());           
-            
-            var domainEvents = domainEntities
-                .SelectMany(x => x.Entity.DomainEvents)
-                .ToList();
-
-            _logger.LogInformation(" [x] OrderingContext.SaveEntitiesAsync(): {0} domain events found to publish.", domainEvents.Count);
-
-            /*
-             * Önce clear etmek gerek,
-             * Çünkü domain event handler lar buraya çağırıyor, clear edilmeden yeni eventlar yayınlanıyor,
-             * Bu da deadlock a, sonrasında stackOverflow'a yol açıyor.              
-            */
-            domainEntities.ToList()
-             .ForEach(entity => entity.Entity.ClearDomainEvents());
-
-            foreach (var domainEvent in domainEvents)
+            try
             {
-                _logger.LogInformation("[x] OrderingContext.SaveEntitiesAsync(): Publishing domain event: {0}", domainEvent.GetType().Name);
-                await _mediator.Publish(domainEvent);
-            }
-            
-        
+                 #region Publishing domain events.
+                    var entries = this.ChangeTracker.Entries();
+                    var domainEntities = this.ChangeTracker
+                        .Entries<Entity>()
+                        .Where(x => x.Entity.DomainEvents != null && x.Entity.DomainEvents.Any()); 
+                        
+                            
+                    _logger.LogInformation(" [x] OrderingContext.SaveEntitiesAsync(): {0} entity found in the OrderingContext.ChangeTracker.",
+                    domainEntities.Count());           
+                    
+                    var domainEvents = domainEntities
+                        .SelectMany(x => x.Entity.DomainEvents)
+                        .ToList();
+
+                    _logger.LogInformation(" [x] OrderingContext.SaveEntitiesAsync(): {0} domain events found to publish.", domainEvents.Count);
+
+                    /*
+                    * Önce clear etmek gerek,
+                    * Çünkü domain event handler lar buraya çağırıyor, clear edilmeden yeni eventlar yayınlanıyor,
+                    * Bu da deadlock a, sonrasında stackOverflow'a yol açıyor.              
+                    */
+                    domainEntities.ToList()
+                    .ForEach(entity => entity.Entity.ClearDomainEvents());
+
+                    foreach (var domainEvent in domainEvents)
+                    {
+                        _logger.LogInformation("[x] OrderingContext.SaveEntitiesAsync(): Publishing domain event: {0}", domainEvent.GetType().Name);
+                        await _mediator.Publish(domainEvent);
+                    }
+                    
                 
-            #endregion
-            // After executing this line all the changes (from the Command Handler and Domain Event Handlers) 
-            // performed through the DbContext will be committed
-            _logger.LogInformation(" [x] OrderingContext.SaveEntitiesAsync(): Entities are being saved to persistance.");
-            var result = await base.SaveChangesAsync();
-            _logger.LogInformation(string.Format(" [x] OrderingContext.SaveEntitiesAsync(): Entities are persisted successfully. Persisted entity count: {0}", result));
-            
-            return true;
+                        
+                #endregion
+
+
+                
+                // After executing this line all the changes (from the Command Handler and Domain Event Handlers) 
+                // performed through the DbContext will be committed
+                _logger.LogInformation(" [x] OrderingContext.SaveEntitiesAsync(): Entities are being saved to persistance.");
+                var result = await base.SaveChangesAsync();
+                _logger.LogInformation(string.Format(" [x] OrderingContext.SaveEntitiesAsync(): Entities are persisted successfully. Persisted entity count: {0}", result));
+                
+                return true;
+            }
+
+            catch(Exception e)
+            {
+                _logger.LogError(e.Message);
+                throw e;
+            }
+          
         }
 
         public async Task<IDbContextTransaction> BeginTransactionAsync()
