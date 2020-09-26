@@ -39,6 +39,7 @@ namespace Ordering.API.Application.Command
 
             //Domain layer
             orderToUpdate.SetStatusAwaitingStockValidation();   
+            _logger.LogInformation(" [x] ({0}) Order status transitioned SUBMITTED -----> AWAITINGVALIDATION", request.OrderId);
     
             //Infrastructure layer.
             return await _orderRepository.UnitOfWork.SaveEntitiesAsync();         

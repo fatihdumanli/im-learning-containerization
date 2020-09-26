@@ -35,6 +35,7 @@ namespace Ordering.API.Application.DomainEventHandlers
                 orderStockItems.Add(new OrderStockItem(item.ProductId, item.GetUnits()));
             }
 
+            _logger.LogInformation(" [x] OrderStatusChangedToAwaitingStockValidationDomainEventHandler: Handling domain event and creating an OrderStatusChangedToAwaitingStockValidationIntegrationEvent to publish to RabbitMQ...");
             var integrationEvent = new OrderStatusChangedToAwaitingStockValidationIntegrationEvent(orderId: notification.OrderId,
                 orderStockItems: orderStockItems);
 
