@@ -68,9 +68,7 @@ namespace Ordering.Infrastructure
         {
             // Dispatch Domain Events collection. 
             // Choices:
-          
-    
-            
+        
             try
             {
                  #region Publishing domain events.
@@ -107,8 +105,6 @@ namespace Ordering.Infrastructure
                         
                 #endregion
 
-
-                
                 // After executing this line all the changes (from the Command Handler and Domain Event Handlers) 
                 // performed through the DbContext will be committed
                 _logger.LogInformation(" [x] OrderingContext.SaveEntitiesAsync(): Entities are being saved to persistance.");
