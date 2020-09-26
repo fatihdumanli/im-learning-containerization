@@ -1,3 +1,4 @@
+using Billing.API.IntegrationEvents.Events;
 using EventBus.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -18,10 +19,18 @@ namespace Billing.API
 
         [Route("confirm")]
         [HttpPost]
-        public Task<IActionResult> ConfirmGracePeriodForOrder(int orderId)
+        public IActionResult ConfirmGracePeriodForOrder(int orderId)
         {
-            _eventBus.Publish(null);
-            return null;
+            if(orderId == 0)
+            {
+                return BadRequest();
+            }
+
+            var gracePeriodConfirmedForOrderEvent = new GracePeriodConfirmedForOrderIntegrationEvent(orderId);
+            
+            _eventBus.Publish(gracePeriodConfirmedForOrderEvent);
+
+            return Ok();
         }
 
     }
