@@ -46,15 +46,15 @@ namespace Ordering.API
 
         public void ConfigureContainer(ContainerBuilder builder)
         {
+            builder.RegisterType<OrderPaymentSucceededIntegrationEventHandler>();
+            builder.RegisterType<OrderPaymentFailedIntegrationEventHandler>();
             builder.RegisterType<GracePeriodConfirmedForOrderIntegrationEventHandler>();
             builder.RegisterType<UserCheckoutAcceptedIntegrationEventHandler>();
             builder.RegisterType<OrderStockConfirmedIntegrationEventHandler>();
             builder.RegisterType<OrderStockRejectedIntegrationEventHandler>();
             builder.RegisterType<OrderingIntegrationEventService>().As<IOrderingIntegrationEventService>();
             builder.RegisterType<Mediator>().As<IMediator>().InstancePerLifetimeScope();
-
-
-            
+       
              // Register all the Command classes (they implement IRequestHandler) in assembly holding the Commands
             builder.RegisterAssemblyTypes(typeof(CreateOrderCommand).GetTypeInfo().Assembly)
                 .AsClosedTypesOf(typeof(IRequestHandler<,>));
@@ -139,6 +139,8 @@ namespace Ordering.API
             eventBus.Subscribe<GracePeriodConfirmedForOrderIntegrationEvent, GracePeriodConfirmedForOrderIntegrationEventHandler>();
             eventBus.Subscribe<OrderStockConfirmedIntegrationEvent, OrderStockConfirmedIntegrationEventHandler>();
             eventBus.Subscribe<OrderStockRejectedIntegrationEvent, OrderStockRejectedIntegrationEventHandler>();
+            eventBus.Subscribe<OrderPaymentSucceededIntegrationEvent, OrderPaymentSucceededIntegrationEventHandler>();
+            eventBus.Subscribe<OrderPaymentFailedIntegrationEvent, OrderPaymentFailedIntegrationEventHandler>();
 
             if (env.IsDevelopment())
             {
