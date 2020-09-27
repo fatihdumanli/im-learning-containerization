@@ -1,9 +1,7 @@
 using System;
 using EventBus.Events;
-using Ordering.Domain.AggregatesModel.BuyerAggregate;
-using Ordering.Domain.AggregatesModel.OrderAggregate;
 
-namespace Ordering.API.Application.IntegrationEvents.Events
+namespace Payment.IntegrationEvents
 {
     public class OrderStatusChangedToStockConfirmedIntegrationEvent: IntegrationEvent
     {
@@ -20,15 +18,8 @@ namespace Ordering.API.Application.IntegrationEvents.Events
 
     }
 
-  
     public class PaymentMethodDTO
     {
-
-        public static PaymentMethodDTO ToPaymentMethodDto(PaymentMethod pm)
-        {
-            return new PaymentMethodDTO(pm.CardHolderName, pm.CardNumber, pm.CVV, pm.Expiration);
-        }
-
         public PaymentMethodDTO(string cardHolderName,
             string cardNumber, string cvv, DateTime expiration)
         {

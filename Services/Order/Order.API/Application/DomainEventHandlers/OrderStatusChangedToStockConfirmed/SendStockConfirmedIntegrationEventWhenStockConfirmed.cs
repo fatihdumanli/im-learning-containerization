@@ -46,7 +46,7 @@ namespace Ordering.API.Application.DomainEventHandlers
             var paymentMethod = buyer.PaymentMethods.First();
             
             var integrationEvent = new OrderStatusChangedToStockConfirmedIntegrationEvent(notification.OrderId, buyer: buyer.Name, 
-                paymentMethod: paymentMethod);
+                paymentMethod: PaymentMethodDTO.ToPaymentMethodDto(paymentMethod));
 
 
             _logger.LogInformation(" [x] SendStockConfirmedIntegrationEventWhenStockConfirmed: " + 

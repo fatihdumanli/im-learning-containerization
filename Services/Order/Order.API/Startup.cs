@@ -117,7 +117,6 @@ namespace Ordering.API
                 return new EventBusRabbitMQ("Order", subsManager: subsManager, autoFac: autoFac, rabbitMqServer: rabbitMqEndpoint, logger: logger);
             });
 
-            services.AddSingleton<DomainDispatcher>();
 
             services.AddLogging(config =>
             {
