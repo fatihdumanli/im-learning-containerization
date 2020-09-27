@@ -80,7 +80,11 @@ namespace Ordering.Domain.AggregatesModel.OrderAggregate
         {
             this._orderStatusId = OrderStatus.StockConfirmed.Id;
         }
-                
 
+        public void SetStatusCancelledWhenStockRejected()
+        {
+            this._orderStatusId = OrderStatus.Cancelled.Id;
+        }
+                
     }
 }

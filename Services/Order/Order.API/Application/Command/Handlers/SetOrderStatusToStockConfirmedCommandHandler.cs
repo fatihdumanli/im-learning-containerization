@@ -27,7 +27,7 @@ namespace Ordering.API.Application.Command
             orderToUpdate.SetStatusStockConfirmed();
             
             _logger.LogInformation(" [x] SetOrderStatusToStockConfirmedCommandHandler: Transitioning order status AWAITING VALIDATION ---> STOCK CONFIRMED" +
-                "for order with id {0}", request.OrderId);
+                " for order with id {0}", request.OrderId);
 
             return await _orderRepository.UnitOfWork.SaveEntitiesAsync();
         }
