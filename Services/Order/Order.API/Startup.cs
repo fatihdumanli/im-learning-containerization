@@ -48,6 +48,8 @@ namespace Ordering.API
         {
             builder.RegisterType<GracePeriodConfirmedForOrderIntegrationEventHandler>();
             builder.RegisterType<UserCheckoutAcceptedIntegrationEventHandler>();
+            builder.RegisterType<OrderStockConfirmedIntegrationEventHandler>();
+            builder.RegisterType<OrderStockRejectedIntegrationEventHandler>();
             builder.RegisterType<OrderingIntegrationEventService>().As<IOrderingIntegrationEventService>();
             builder.RegisterType<Mediator>().As<IMediator>().InstancePerLifetimeScope();
 
@@ -136,6 +138,8 @@ namespace Ordering.API
             eventBus.StartConsuming();
             eventBus.Subscribe<UserCheckoutAcceptedIntegrationEvent, UserCheckoutAcceptedIntegrationEventHandler>();
             eventBus.Subscribe<GracePeriodConfirmedForOrderIntegrationEvent, GracePeriodConfirmedForOrderIntegrationEventHandler>();
+            eventBus.Subscribe<OrderStockConfirmedIntegrationEvent, OrderStockConfirmedIntegrationEventHandler>();
+            eventBus.Subscribe<OrderStockRejectedIntegrationEvent, OrderStockRejectedIntegrationEventHandler>();
 
             if (env.IsDevelopment())
             {

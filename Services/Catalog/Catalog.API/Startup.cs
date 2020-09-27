@@ -49,7 +49,7 @@ namespace Catalog.API
             var s = Configuration["ConnectionString"];
 
 
-            services.AddSingleton<IEventBus, EventBusRabbitMQ>(sp =>
+            services.AddSingleton<IEventBus, EventBusRabbitMQ>(sp => 
             {                  
                 var logger = sp.GetRequiredService<ILogger<EventBusRabbitMQ>>();
                 var subsManager = sp.GetRequiredService<IEventBusSubscriptionManager>();
