@@ -9,6 +9,7 @@ namespace Ordering.Domain.AggregatesModel.BuyerAggregate
         Buyer Update(Buyer buyer);
         Task<Buyer> FindAsync(string buyerIdentityGuid);
         Buyer FindByNameAsync(string name);
+        Task<Buyer> FindByIdAsync(int id);
                 
     }
 }

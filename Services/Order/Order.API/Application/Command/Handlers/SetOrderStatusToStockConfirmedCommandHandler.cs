@@ -24,6 +24,9 @@ namespace Ordering.API.Application.Command
             _logger.LogInformation(" [x] SetOrderStatusToStockConfirmedCommandHandler: Handling the command for order with id {0}...", request.OrderId);
             
             var orderToUpdate = await _orderRepository.GetAsync(request.OrderId);
+
+            //Domain layer
+            //Adds a domain event called 'OrderStatusChangedToStockConfirmedDomainEvent'
             orderToUpdate.SetStatusStockConfirmed();
             
             _logger.LogInformation(" [x] SetOrderStatusToStockConfirmedCommandHandler: Transitioning order status AWAITING VALIDATION ---> STOCK CONFIRMED" +

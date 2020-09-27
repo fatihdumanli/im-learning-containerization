@@ -1,5 +1,7 @@
 using System;
 using EventBus.Events;
+using Ordering.Domain.AggregatesModel.BuyerAggregate;
+using Ordering.Domain.AggregatesModel.OrderAggregate;
 
 namespace Ordering.API.Application.IntegrationEvents.Events
 {
@@ -8,11 +10,24 @@ namespace Ordering.API.Application.IntegrationEvents.Events
         public int OrderId { get; private set; }
         public string Buyer { get; private set; }
         public PaymentMethodDTO PaymentMethod { get; private set; } 
+
+        public OrderStatusChangedToStockConfirmedIntegrationEvent(int orderId, string buyer, PaymentMethod paymentMethod)
+        {
+            this.OrderId = orderId;
+            this.Buyer = buyer;
+            this.PaymentMethod = PaymentMethodDTO.ToPaymentMethodDto(paymentMethod);
+        }
+
     }
 
-
+  
     public class PaymentMethodDTO
     {
+
+        public static PaymentMethodDTO ToPaymentMethodDto(PaymentMethod pm)
+        {
+            return new PaymentMethodDTO(pm.CardHolderName, pm.CardNumber, pm.CVV, pm.Expiration);
+        }
 
         public PaymentMethodDTO(string cardHolderName,
             string cardNumber, string cvv, DateTime expiration)

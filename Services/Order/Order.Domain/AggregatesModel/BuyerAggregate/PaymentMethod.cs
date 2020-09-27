@@ -16,6 +16,35 @@ namespace Ordering.Domain.AggregatesModel.BuyerAggregate
 
         public CardType CardType { get; private set; }
 
+
+        public string CardNumber { 
+            get {
+                return _cardNumber;
+            }
+        }
+
+        public string CardHolderName
+        {
+            get {
+                return _cardHolderName;
+            }
+        }
+
+        public string CVV
+        {
+            get {
+                return _securityNumber;
+            }
+        }
+        
+        public DateTime Expiration
+        {
+            get
+            {
+                return _expiration;
+            }
+        }
+
         private ILogger<PaymentMethod> _logger;
         protected PaymentMethod() {}
 

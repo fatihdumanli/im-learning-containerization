@@ -79,6 +79,7 @@ namespace Ordering.Domain.AggregatesModel.OrderAggregate
         public void SetStatusStockConfirmed()
         {
             this._orderStatusId = OrderStatus.StockConfirmed.Id;
+            AddDomainEvent(new OrderStatusChangedToStockConfirmedDomainEvent(this.Id));
         }
 
         public void SetStatusCancelledWhenStockRejected()

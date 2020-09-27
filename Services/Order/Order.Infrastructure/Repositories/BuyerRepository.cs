@@ -52,6 +52,16 @@ namespace Ordering.Infrastructure.Repositories
             return buyer;
         }
 
+        public async Task<Buyer> FindByIdAsync(int id)
+        {
+            var buyer = await _context.Buyers
+                .Where(b => b.Id == id)
+                .Include(b => b.PaymentMethods)
+                .SingleOrDefaultAsync();
+
+            return buyer;      
+        }
+
         public Buyer FindByNameAsync(string name)
         {
             var buyer = _context.Buyers
