@@ -86,6 +86,11 @@ namespace Ordering.Domain.AggregatesModel.OrderAggregate
         {
             this._orderStatusId = OrderStatus.Cancelled.Id;
         }
-                
+
+        public void SetStatusToPaid()
+        {
+            this._orderStatusId = OrderStatus.Paid.Id;
+        }   
+        
     }
 }
