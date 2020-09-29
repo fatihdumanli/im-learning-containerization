@@ -5,10 +5,11 @@ using Microsoft.Extensions.Logging;
 using Ordering.API.Application.IntegrationEvents.Events;
 using Ordering.API.Application.IntegrationEvents.IntegrationEventService;
 using Ordering.Domain.DomainEvents;
+using Ordering.Domain.SharedKernel;
 
 namespace Ordering.API.Application.DomainEventHandlers
 {
-    public class OrderShippedDomainEventHandler : INotificationHandler<OrderShippedDomainEvent>
+    public class OrderShippedDomainEventHandler : IDomainEventHandler<OrderShippedDomainEvent>
     {
         private ILogger<OrderShippedDomainEventHandler> _logger;
         private IOrderingIntegrationEventService _orderingIntegrationEventService;

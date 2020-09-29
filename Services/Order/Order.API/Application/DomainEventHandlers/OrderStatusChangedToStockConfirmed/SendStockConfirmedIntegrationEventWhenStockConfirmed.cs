@@ -9,11 +9,12 @@ using Ordering.API.Application.IntegrationEvents.IntegrationEventService;
 using Ordering.Domain.AggregatesModel.BuyerAggregate;
 using Ordering.Domain.AggregatesModel.OrderAggregate;
 using Ordering.Domain.DomainEvents;
+using Ordering.Domain.SharedKernel;
 
 namespace Ordering.API.Application.DomainEventHandlers
 {
     public class SendStockConfirmedIntegrationEventWhenStockConfirmed :
-        INotificationHandler<OrderStatusChangedToStockConfirmedDomainEvent>
+        IDomainEventHandler<OrderStatusChangedToStockConfirmedDomainEvent>
     {
 
         ILogger<SendStockConfirmedIntegrationEventWhenStockConfirmed> _logger;

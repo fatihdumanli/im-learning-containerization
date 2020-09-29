@@ -6,11 +6,12 @@ using Microsoft.Extensions.Logging;
 using Ordering.API.Application.IntegrationEvents.Events;
 using Ordering.API.Application.IntegrationEvents.IntegrationEventService;
 using Ordering.Domain.DomainEvents;
+using Ordering.Domain.SharedKernel;
 
 namespace Ordering.API.Application.DomainEventHandlers
 {
     public class OrderStatusChangedToAwaitingStockValidationDomainEventHandler
-        : INotificationHandler<OrderStatusChangedToAwaitingStockValidationDomainEvent>
+        : IDomainEventHandler<OrderStatusChangedToAwaitingStockValidationDomainEvent>
     {
         private IOrderingIntegrationEventService _orderingIntegrationEventService;
         private ILogger<OrderStatusChangedToAwaitingStockValidationDomainEventHandler> _logger;

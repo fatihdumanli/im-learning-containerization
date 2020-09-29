@@ -5,10 +5,11 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using Ordering.Domain.AggregatesModel.OrderAggregate;
 using Ordering.Domain.DomainEvents;
+using Ordering.Domain.SharedKernel;
 
 namespace Ordering.API.Application.DomainEventHandlers
 {
-    public class UpdateOrderWhenPaymentMethodValidated : INotificationHandler<PaymentMethodValidatedDomainEvent>
+    public class UpdateOrderWhenPaymentMethodValidated : IDomainEventHandler<PaymentMethodValidatedDomainEvent>
     {
         private IOrderRepository _orderRepository;
         private ILogger<UpdateOrderWhenPaymentMethodValidated> _logger;
