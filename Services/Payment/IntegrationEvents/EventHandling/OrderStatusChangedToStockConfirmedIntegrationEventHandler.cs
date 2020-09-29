@@ -11,7 +11,7 @@ namespace Payment.IntegrationEvents
         private ILogger<OrderStatusChangedToStockConfirmedIntegrationEventHandler> _logger;
         private IEventBus _eventBus;
 
-        bool isPaymentSuccessful = true;
+        bool isPaymentSuccessful = false;
         
         public OrderStatusChangedToStockConfirmedIntegrationEventHandler(
             IEventBus eventBus,

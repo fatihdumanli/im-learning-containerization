@@ -88,6 +88,12 @@ namespace Ordering.Domain.AggregatesModel.OrderAggregate
             AddDomainEvent(new OrderCancelledDomainEvent(this.Id, reason: "Insufficient stock for requested item(s)"));
         }
 
+        public void SetStatusCancelledWhenPaymentFailed()
+        {
+            this._orderStatusId = OrderStatus.Cancelled.Id;
+            AddDomainEvent(new OrderCancelledDomainEvent(this.Id, reason: "Payment failed"));
+        }
+
         public void SetStatusToPaid()
         {
             this._orderStatusId = OrderStatus.Paid.Id;
