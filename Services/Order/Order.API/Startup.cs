@@ -126,12 +126,25 @@ namespace Ordering.API
            .Configure<LoggerFilterOptions>(options => {
 
            });
+
+            services.AddSwaggerGen(options =>
+            {
+                options.DescribeAllEnumsAsStrings();
+                options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo()
+                {
+                    Title = "eShop - Order API",
+                    Version = "v1",
+                    Description = "The Ordering microservice HTTP API."
+                });
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             this.AutofacContainer = app.ApplicationServices.GetAutofacRoot();
+            app.UseSwagger().UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API v1.0"));
 
             var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
             eventBus.StartConsuming();

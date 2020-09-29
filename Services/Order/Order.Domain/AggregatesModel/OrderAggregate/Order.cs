@@ -91,6 +91,12 @@ namespace Ordering.Domain.AggregatesModel.OrderAggregate
         {
             this._orderStatusId = OrderStatus.Paid.Id;
         }   
+
+        public void SetStatusShipped()
+        {
+            this._orderStatusId = OrderStatus.Shipped.Id;      
+            AddDomainEvent(new OrderShippedDomainEvent(this.Id));   
+        }
         
     }
 }
