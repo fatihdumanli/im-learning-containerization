@@ -1,8 +1,9 @@
 using MediatR;
+using Ordering.Domain.SharedKernel;
 
 namespace Ordering.Domain.DomainEvents
 {
-    public class OrderShippedDomainEvent : INotification
+    public class OrderShippedDomainEvent : IDomainEvent
     {
         public int OrderId { get; private set; }       
 

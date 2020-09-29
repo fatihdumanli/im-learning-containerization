@@ -1,10 +1,11 @@
 using System.Collections.Generic;
 using MediatR;
 using Ordering.Domain.AggregatesModel.OrderAggregate;
+using Ordering.Domain.SharedKernel;
 
 namespace Ordering.Domain.DomainEvents
 {
-    public class OrderStatusChangedToAwaitingStockValidationDomainEvent : INotification
+    public class OrderStatusChangedToAwaitingStockValidationDomainEvent : IDomainEvent
     {
         public int OrderId { get; private set; }
         public IEnumerable<OrderItem> OrderItems { get; private set; }

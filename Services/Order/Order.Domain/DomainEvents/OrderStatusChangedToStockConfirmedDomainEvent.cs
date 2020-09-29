@@ -1,9 +1,10 @@
 using MediatR;
+using Ordering.Domain.SharedKernel;
 
 namespace Ordering.Domain.DomainEvents
 {
     public class OrderStatusChangedToStockConfirmedDomainEvent : 
-        INotification
+        IDomainEvent
     {
         public int OrderId { get; private set; }
 

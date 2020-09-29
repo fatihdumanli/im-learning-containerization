@@ -20,15 +20,15 @@ namespace Ordering.Domain.SharedKernel
                 _id = value;
             }
         }      
-        protected List<INotification> _domainEvents;
+        protected List<IDomainEvent> _domainEvents;
         
-        public IReadOnlyCollection<INotification> DomainEvents => _domainEvents?.AsReadOnly();
+        public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents?.AsReadOnly();
         
-        protected void AddDomainEvent(INotification domainEvent) 
+        protected void AddDomainEvent(IDomainEvent domainEvent) 
         {
             if(_domainEvents == null)
             {
-                _domainEvents = new List<INotification>();
+                _domainEvents = new List<IDomainEvent>();
             }
 
             _domainEvents.Add(domainEvent);

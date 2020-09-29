@@ -5,20 +5,19 @@ using DomainDispatching.DomainEvent;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Ordering.API.Infrastructure.Logging;
 using Ordering.Domain.AggregatesModel.BuyerAggregate;
 using Ordering.Domain.DomainEvents;
 using Ordering.Domain.Exceptions;
 
 namespace Ordering.API.Application.DomainEventHandlers
 {
-    public class ValidateOrAddBuyerWhenOrderStarted : INotificationHandler<OrderStartedDomainEvent>
+    public class ValidateOrAddBuyerWhenOrderStarted : Loggable, INotificationHandler<OrderStartedDomainEvent>
     {
-        private ILogger<ValidateOrAddBuyerWhenOrderStarted> _logger;
         private IBuyerRepository _buyerRepository;
         public ValidateOrAddBuyerWhenOrderStarted(IBuyerRepository repository, 
-            ILogger<ValidateOrAddBuyerWhenOrderStarted> logger)
+            ILogger<Loggable> logger) : base(logger)
         {
-            _logger = logger;
             _buyerRepository = repository ?? throw new ArgumentNullException("OrderStartedDomainEventHandler needs an IBuyerRepository implementation.");
         }
 

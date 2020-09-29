@@ -1,9 +1,9 @@
-using MediatR;
 using Ordering.Domain.AggregatesModel.BuyerAggregate;
+using Ordering.Domain.SharedKernel;
 
 namespace Ordering.Domain.DomainEvents
 {
-    public class PaymentMethodValidatedDomainEvent : INotification
+    public class PaymentMethodValidatedDomainEvent : IDomainEvent
     {
         public int OrderId { get; private set; }
         public Buyer Buyer { get; private set; }

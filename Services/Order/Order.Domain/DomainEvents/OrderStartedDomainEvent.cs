@@ -1,11 +1,11 @@
-using DomainDispatching.DomainEvent;
 using MediatR;
 using Ordering.Domain.AggregatesModel.OrderAggregate;
+using Ordering.Domain.SharedKernel;
 using System;
 
 namespace Ordering.Domain.DomainEvents
 {
-    public class OrderStartedDomainEvent : INotification
+    public class OrderStartedDomainEvent : IDomainEvent
     {
         public string Buyer { get; private set; }
         public string CardNumber { get; private set; }

@@ -9,6 +9,7 @@ namespace Ordering.API.Infrastructure.Logging
         public Loggable(ILogger<Loggable> logger)
         {
             _logger = logger;
+            _logger.LogInformation(" [xxx] LOGGABLE: Object HashCode: {0}", _logger.GetHashCode());
         }
 
         protected Loggable()
