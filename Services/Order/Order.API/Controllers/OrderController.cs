@@ -25,6 +25,8 @@ namespace Ordering.API.Application.Controllers
          {
              var command = new ShipOrderCommand(orderId);
 
+             _logger.LogInformation(" [x] Logger hashcode: {0}", _logger.GetHashCode());
+
              _logger.LogInformation(" [x] OrderController.ShipOrderAsync(): Sending ShipOrderCommand for order with id {0}", orderId);
              await _mediator.Send(command);
 

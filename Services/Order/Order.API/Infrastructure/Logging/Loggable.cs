@@ -6,9 +6,14 @@ namespace Ordering.API.Infrastructure.Logging
     public class Loggable
     {        
         protected ILogger<Loggable> _logger;
-        protected Loggable(ILogger<Loggable> logger)
+        public Loggable(ILogger<Loggable> logger)
         {
             _logger = logger;
+        }
+
+        protected Loggable()
+        {   
+            var x = 2;
         }
     }
 }

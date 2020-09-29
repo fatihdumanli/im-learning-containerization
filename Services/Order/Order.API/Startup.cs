@@ -26,6 +26,7 @@ using Ordering.API.Application.DomainEventHandlers;
 using Ordering.API.Application.IntegrationEvents.EventHandling;
 using Ordering.API.Application.IntegrationEvents.Events;
 using Ordering.API.Application.IntegrationEvents.IntegrationEventService;
+using Ordering.API.Infrastructure.Logging;
 using Ordering.Domain.AggregatesModel.BuyerAggregate;
 using Ordering.Domain.AggregatesModel.OrderAggregate;
 using Ordering.Domain.DomainEvents;
@@ -117,6 +118,11 @@ namespace Ordering.API
                 return new EventBusRabbitMQ("Order", subsManager: subsManager, autoFac: autoFac, rabbitMqServer: rabbitMqEndpoint, logger: logger);
             });
 
+            services.AddScoped<Loggable>(sp => 
+            {
+                var logger = sp.GetRequiredService<ILogger<Loggable>>();
+                return new Loggable(logger); 
+            });
 
             services.AddLogging(config =>
             {

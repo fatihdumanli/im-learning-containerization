@@ -26,6 +26,12 @@ namespace Ordering.API.Application.Command
 
             var orderToShip = await _orderRepository.GetAsync(orderId: request.OrderId);
 
+            if(orderToShip == null)
+            {
+                _logger.LogError(" [x] ShipOrderCommandHandler: Order is not found in persistance.");
+                return false;
+            }
+
             _logger.LogInformation(" [X] ShipOrderCommandHandler: Transitioning order status PAID ----> SHIPPED");
             orderToShip.SetStatusShipped();            
 

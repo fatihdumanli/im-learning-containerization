@@ -4,22 +4,21 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Ordering.API.Infrastructure.Logging;
 using Ordering.Domain.AggregatesModel.OrderAggregate;
 
 namespace Ordering.API.Application.Command
 {
-    public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, bool>
+    public class CreateOrderCommandHandler : Loggable, IRequestHandler<CreateOrderCommand, bool>
     {
-        private ILogger<CreateOrderCommandHandler> _logger;
         private IOrderRepository _repository;
-        public CreateOrderCommandHandler(IOrderRepository repository, 
-            ILogger<CreateOrderCommandHandler> logger)
+
+        public CreateOrderCommandHandler(IOrderRepository repository,
+            ILogger<Loggable> logger)
+            : base(logger)
         {
-            _logger = logger;
             _repository = repository;
         }
-
-    
 
         public async Task<bool> Handle(CreateOrderCommand command, CancellationToken cancellationToken)
         {
