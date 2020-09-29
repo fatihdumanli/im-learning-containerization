@@ -85,6 +85,7 @@ namespace Ordering.Domain.AggregatesModel.OrderAggregate
         public void SetStatusCancelledWhenStockRejected()
         {
             this._orderStatusId = OrderStatus.Cancelled.Id;
+            AddDomainEvent(new OrderCancelledDomainEvent(this.Id, reason: "Insufficient stock for requested item(s)"));
         }
 
         public void SetStatusToPaid()
